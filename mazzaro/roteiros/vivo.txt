@@ -1,0 +1,3 @@
+# Bot no ar esperando comandos de fora (plugin mzctl; tools/mz/kore_cmd.py no mazzaro). Sai sozinho no fim do teto.
+entrar | - | estado:ingame | 90
+ficar  | - | tempo:3600    | 3660

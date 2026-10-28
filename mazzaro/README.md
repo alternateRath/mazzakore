@@ -19,6 +19,7 @@ do mundo, e sai.
 | `plugins/mzteste` | roteiro de regressão (passos, esperas, timeout, resultado em YAML) |
 | `plugins/mzmapa` | mapeamento: pacotes recebidos e enviados (tamanho visto × esperado, tratado ou não pelo OpenKore, ids fora da tabela) e censo do mundo (NPCs, monstros, portais por mapa) em `mapa.yml` |
 | `mazzaro/config.txt`, `mazzaro/roteiros/` | config base do bot e os roteiros |
+| `plugins/mzctl` | controle de fora: comandos do console e estado do bot por TCP local (127.0.0.1:6950, JSON por linha), lido por `tools/mz/kore_cmd.py` do mazzaro (abaixo, "mzctl") |
 | XKore 2 no 2026 | `src/Base/Ragnarok/*`, `src/Network/XKore2/MapServer.pm`, ids do 2026 no Receive | o bot joga e o cliente kRO 2026 se conecta nele para mostrar (abaixo, "XKore 2") |
 
 ## Como usar (do mazzaro)
@@ -69,6 +70,24 @@ python tools\mz\visual.py kro-2026 --xkore --manter            # loga com o user
 - O `AC_ACCEPT_LOGIN` do OpenKore preenche o texto "ip:porta" (128 bytes) da entrada do char-server, que o rAthena
   manda zerado; quem tem o texto conecta nele, então o `pktproxy` reescreve os dois.
 
+## mzctl: comandar o bot no ar (X1, 2026-10-28)
+```
+.\mz.ps1 kore kro-2026 -Roteiro vivo                 # bot no ar sem tela (ou -Xkore -Janela, com o cliente grafico)
+.\mz.ps1 kore-cmd "move 150 175" --ate pos:150,175   # comando + espera; mostra o log gerado e o estado
+.\mz.ps1 kore-cmd "talknpc 147 189" --espera 3
+.\mz.ps1 kore-estado                                 # mapa, posicao, HP/SP, inventario, NPCs/monstros/jogadores perto
+```
+- Requisição: `{"cmd": ..., "ate": ..., "timeout": ..., "espera": ...}` ou `{"estado": true}`; condições
+  `estado:ingame`, `mapa:<nome>`, `log:<regex>`, `pos:<x>,<y>[,<raio>]`, `parado`, `tempo:<s>`. O log da resposta
+  começa **depois** do eco `[mzctl] comando: …` (um `log:` com o texto do próprio comando não casa com o eco).
+- O `kore.py` carrega o plugin sempre (`mzctl_porta 6950`; `--ctl 0` desliga). Só escuta em 127.0.0.1.
+- **Visto em jogo com o cliente 2026 em XKore 2**: fala (balão e chat no cliente), `move` com `--ate pos:` (2,9 s),
+  `@warp` para zona de 2001 e `@go 0` iniciados pelo bot (o cliente acompanha a troca de mapa), `talknpc` no
+  Historiador (janela de diálogo e menu de 8 opções desenhados no cliente, iguais ao que o bot lista), `talk resp 7`.
+- Limite visto: quando o bot encerra a conversa com o NPC, a janela fica aberta no cliente com o botão "close" (o
+  OpenKore fecha direto com o servidor; a interface do cliente não fica sabendo).
+- Saída do `kore_cmd.py` em acentos: no Bash, `PYTHONIOENCODING=utf-8`; no PowerShell 5.1 o console troca os acentos.
+
 ## Fatos (verificados em 2026-10-28)
 - **kro-2026**: `serverType kRO_RagexeRE_2026_02_19`, `charBlockSize 175` (o `CHARACTER_INFO` do mazzathena tem nome
   de 24 bytes), tabelas `mazzaro;translated/kRO_english;kRO/RagexeRE_2026_02_19;kRO`. Login `0x0064` com a versão do
@@ -87,7 +106,9 @@ python tools\mz\visual.py kro-2026 --xkore --manter            # loga com o user
 
 ## Não verificado
 - Combate, itens, troca, grupo e guilda pelo bot no 2026 (o OpenKore tem as rotinas; nenhum roteiro as exercita ainda).
-- XKore 2: ressincronia no formato 2026 (estado, inventário, atores em volta); troca de mapa iniciada pelo bot;
-  comandos para o bot sem roteiro (hoje só pelo console visível ou por roteiro); perfil `kro-2020` em XKore 2.
+- XKore 2: ressincronia no formato 2026 (estado, inventário, atores em volta); fechar o diálogo de NPC no cliente
+  quando o bot encerra; perfil `kro-2020` em XKore 2.
+- mzctl: vários clientes ao mesmo tempo (atende um pedido por conexão, sem teste de concorrência); combate, loja e
+  troca por comando.
 - Perfis Sabine (`alpha-2001`, `beta1-2002`): sem bloco `openkore`; o OpenKore não tem serverType para 2001-2002.
 - `kro-2021`: bloco `openkore` escrito, servidor ainda não compilado com 20211103.
