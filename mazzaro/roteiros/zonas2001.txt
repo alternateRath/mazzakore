@@ -1,0 +1,7 @@
+# Roteiro das zonas de 2001: o bot sai de Prontera, fala com o Historiador (portal com conversa em tables/mazzaro/portals.txt)
+# e anda ate a vila de Morroc de 2001; depois atravessa um portal de 2001 a pe e volta. Formato: nome | comando | espera | timeout_s
+entrar      | -                      | estado:ingame                      | 90
+prontera    | c @go 0                | mapa:prontera                      | 20
+historiador | move mzmocvilg01       | mapa:mzmocvilg01                   | 180
+portal2001  | move mzmocfild01       | mapa:mzmocfild01                   | 240
+volta       | c @go 0                | mapa:prontera                      | 20

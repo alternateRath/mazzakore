@@ -1,0 +1,72 @@
+# Censo das zonas de 2001 (gerado por tools/kore_tables.py do mazzaro): o mzmapa anota o que o bot ve
+# do ponto de chegada do Historiador (raio de visao). Formato: nome | comando | espera | timeout_s
+entrar | - | estado:ingame | 90
+mzprtvilg00 | c @warp mzprtvilg00 100 102 | mapa:mzprtvilg00 | 20
+olhar_mzprtvilg00 | - | tempo:4 | 10
+mzprtvilg02 | c @warp mzprtvilg02 100 109 | mapa:mzprtvilg02 | 20
+olhar_mzprtvilg02 | - | tempo:4 | 10
+mzprtvilg01 | c @warp mzprtvilg01 100 109 | mapa:mzprtvilg01 | 20
+olhar_mzprtvilg01 | - | tempo:4 | 10
+mzprtcstl01 | c @warp mzprtcstl01 100 100 | mapa:mzprtcstl01 | 20
+olhar_mzprtcstl01 | - | tempo:4 | 10
+mzprtintr02 | c @warp mzprtintr02 95 100 | mapa:mzprtintr02 | 20
+olhar_mzprtintr02 | - | tempo:4 | 10
+mzprtintr01 | c @warp mzprtintr01 112 100 | mapa:mzprtintr01 | 20
+olhar_mzprtintr01 | - | tempo:4 | 10
+mzprtfild01 | c @warp mzprtfild01 100 100 | mapa:mzprtfild01 | 20
+olhar_mzprtfild01 | - | tempo:4 | 10
+mzprtfild00 | c @warp mzprtfild00 100 100 | mapa:mzprtfild00 | 20
+olhar_mzprtfild00 | - | tempo:4 | 10
+mzprtfild04 | c @warp mzprtfild04 100 100 | mapa:mzprtfild04 | 20
+olhar_mzprtfild04 | - | tempo:4 | 10
+mzprtfild05 | c @warp mzprtfild05 100 100 | mapa:mzprtfild05 | 20
+olhar_mzprtfild05 | - | tempo:4 | 10
+mzprtdugn00 | c @warp mzprtdugn00 95 100 | mapa:mzprtdugn00 | 20
+olhar_mzprtdugn00 | - | tempo:4 | 10
+mzprtdugn01 | c @warp mzprtdugn01 100 100 | mapa:mzprtdugn01 | 20
+olhar_mzprtdugn01 | - | tempo:4 | 10
+mzmocvilg00 | c @warp mzmocvilg00 100 100 | mapa:mzmocvilg00 | 20
+olhar_mzmocvilg00 | - | tempo:4 | 10
+mzmocvilg01 | c @warp mzmocvilg01 100 100 | mapa:mzmocvilg01 | 20
+olhar_mzmocvilg01 | - | tempo:4 | 10
+mzmocvilg02 | c @warp mzmocvilg02 100 100 | mapa:mzmocvilg02 | 20
+olhar_mzmocvilg02 | - | tempo:4 | 10
+mzmocintr00 | c @warp mzmocintr00 99 100 | mapa:mzmocintr00 | 20
+olhar_mzmocintr00 | - | tempo:4 | 10
+mzmocintr01 | c @warp mzmocintr01 93 105 | mapa:mzmocintr01 | 20
+olhar_mzmocintr01 | - | tempo:4 | 10
+mzmocintr02 | c @warp mzmocintr02 101 109 | mapa:mzmocintr02 | 20
+olhar_mzmocintr02 | - | tempo:4 | 10
+mzmocintr04 | c @warp mzmocintr04 95 81 | mapa:mzmocintr04 | 20
+olhar_mzmocintr04 | - | tempo:4 | 10
+mzmocfild01 | c @warp mzmocfild01 100 100 | mapa:mzmocfild01 | 20
+olhar_mzmocfild01 | - | tempo:4 | 10
+mzmocfild02 | c @warp mzmocfild02 100 100 | mapa:mzmocfild02 | 20
+olhar_mzmocfild02 | - | tempo:4 | 10
+mzmocfild03 | c @warp mzmocfild03 100 100 | mapa:mzmocfild03 | 20
+olhar_mzmocfild03 | - | tempo:4 | 10
+mzmocfild04 | c @warp mzmocfild04 100 100 | mapa:mzmocfild04 | 20
+olhar_mzmocfild04 | - | tempo:4 | 10
+mzmocdugn01 | c @warp mzmocdugn01 99 100 | mapa:mzmocdugn01 | 20
+olhar_mzmocdugn01 | - | tempo:4 | 10
+mzmocdugn02 | c @warp mzmocdugn02 100 101 | mapa:mzmocdugn02 | 20
+olhar_mzmocdugn02 | - | tempo:4 | 10
+mzgefvilg00 | c @warp mzgefvilg00 100 100 | mapa:mzgefvilg00 | 20
+olhar_mzgefvilg00 | - | tempo:4 | 10
+mzgefvilg01 | c @warp mzgefvilg01 74 76 | mapa:mzgefvilg01 | 20
+olhar_mzgefvilg01 | - | tempo:4 | 10
+mzfayvilg00 | c @warp mzfayvilg00 100 100 | mapa:mzfayvilg00 | 20
+olhar_mzfayvilg00 | - | tempo:4 | 10
+mzfayvilg01 | c @warp mzfayvilg01 98 100 | mapa:mzfayvilg01 | 20
+olhar_mzfayvilg01 | - | tempo:4 | 10
+mzzoo2001 | c @warp mzzoo2001 91 57 | mapa:mzzoo2001 | 20
+olhar_mzzoo2001 | - | tempo:4 | 10
+mztest | c @warp mztest 100 100 | mapa:mztest | 20
+olhar_mztest | - | tempo:4 | 10
+mztanktest | c @warp mztanktest 100 100 | mapa:mztanktest | 20
+olhar_mztanktest | - | tempo:4 | 10
+mztanktest2 | c @warp mztanktest2 100 100 | mapa:mztanktest2 | 20
+olhar_mztanktest2 | - | tempo:4 | 10
+mzprtintr1a | c @warp mzprtintr1a 100 100 | mapa:mzprtintr1a | 20
+olhar_mzprtintr1a | - | tempo:4 | 10
+volta | c @go 0 | mapa:prontera | 20
