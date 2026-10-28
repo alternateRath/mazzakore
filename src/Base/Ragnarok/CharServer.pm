@@ -100,7 +100,7 @@ sub game_login {
 		my $output;
 		# 099D
 		my @char_list = $self->getCharacters($session);
-		if ($self->{recvPacketParser}{packet_lut}{received_characters} eq '099D') {
+		if ($self->{recvPacketParser}{packet_lut}{received_characters} =~ /^(?:099D|0B72)$/) {
 			$output = $self->{recvPacketParser}->reconstruct({
 				switch => 'received_characters_info',
 				normal_slot => $charSvrSet{normal_slot},
@@ -177,6 +177,9 @@ sub char_login {
 					mapIP => $host,
 					mapPort => $self->{mapServer}->getPort,
 				}));
+				# quem fecha e o cliente, ao ir para o map (como no rAthena): o cliente kRO 2026 trata o fechamento
+				# imediato como "Desconectado do servidor" antes de seguir o redirecionamento
+				return;
 			}
 		}
 	}

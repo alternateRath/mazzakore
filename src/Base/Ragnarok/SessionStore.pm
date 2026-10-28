@@ -11,7 +11,8 @@ sub new {
 	my %self = (
 		sessions => {},
 		sessionsByTime => [],
-		sessionCount => 0
+		# nunca 0: o cliente kRO 2026 nao segue para o char-server com login_id1 = 0 (o rAthena sorteia)
+		sessionCount => 1 + int(rand(0x7FFFFFFE))
 	);
 	return bless \%self, $class;
 }
@@ -75,7 +76,7 @@ sub removeTimedOutSessions {
 sub generateSessionID {
 	my ($self) = @_;
 	my $ID = $self->{sessionCount};
-	$self->{sessionCount} = ($self->{sessionCount} + 1) % 0xFFFFFFFF;
+	$self->{sessionCount} = ($self->{sessionCount} + 1) % 0xFFFFFFFF || 1;
 	return $ID;
 }
 

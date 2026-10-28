@@ -119,7 +119,8 @@ sub master_login {
 			accountSex => $session{sex},
 			servers => \@servers,
 		}));
-		$client->close();
+		# sem close: quem fecha e o cliente, ao ir para o char-server (como no rAthena); o cliente kRO 2026 trata o
+		# fechamento logo apos o AC_ACCEPT_LOGIN como "Desconectado do servidor" (corrida: as vezes passa)
 
 	} elsif ($result == ACCOUNT_NOT_FOUND) {
 		$client->send($self->{recvPacketParser}->reconstruct({

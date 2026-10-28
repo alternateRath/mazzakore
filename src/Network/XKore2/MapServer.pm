@@ -196,6 +196,16 @@ sub map_loaded {
 	# Do this just in case $client->{session}{dummy} was set after
 	# the user logs in.
 	$char->{ID} = $client->{session}{accountID};
+	# XKore_ressincronia 0 (mazzaro): nao remonta o estado (os send_* abaixo empacotam formatos antigos que derrubam
+	# o cliente kRO 2026); o cliente fica so com o que o servidor mandar dali em diante
+	if (defined $config{XKore_ressincronia} && !$config{XKore_ressincronia}) {
+		# ZC_NOTIFY_ACTORINIT: sem ele o cliente 2026 carrega o mapa mas nao aceita teclado nem mouse
+		$client->send(pack('v', 0x0B1B));
+		$self->send_welcome($client);
+		$args->{mangle} = 2;
+		$RunOnce = 0;
+		return;
+	}
 	$self->send_player_info($client, $char);
 	$self->send_avoid_sprite_error_hack($client, $char);
 	$self->send_npc_info($client);

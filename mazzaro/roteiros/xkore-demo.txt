@@ -1,0 +1,8 @@
+# XKore 2, prova do sentido bot -> cliente (X0): o bot entra, espera o cliente grafico conectar nele, fala, anda e fica.
+# Uso: mz kore <perfil> --xkore --roteiro xkore-demo; logo depois, mz visual <cliente> --xkore --manter.
+entrar  | -                   | estado:ingame          | 90
+prt     | c @go 0             | mapa:prontera          | 20
+cliente | -                   | tempo:35               | 45
+falar   | c x0 o bot fala     | log:x0 o bot fala      | 10
+andar   | move 150 170        | tempo:10               | 15
+ficar   | -                   | tempo:900              | 960
