@@ -1,0 +1,23 @@
+# Valores do Mazzaro sobre o control/config.txt padrao do OpenKore (tools/mz/kore.py gera o arquivo final em
+# run/kore/<perfil>/control/). Formato "chave valor". master/server/mzteste_* sao preenchidos pelo kore.py.
+# Conta de teste local (rAthena, group 99): nao e segredo, so existe no banco local.
+username mazzabot
+password mazzabot
+char 0
+XKore 0
+# bot parado: so o roteiro age
+attackAuto 0
+itemsTakeAuto 0
+itemsGatherAuto 0
+route_randomWalk 0
+sitAuto_idle 0
+teleportAuto_hp 0
+teleportAuto_deadly 0
+autoTalkCont 0
+dcOnDeath 0
+# sem "Bye!" esperando Enter ao sair (senao o processo fica preso ate o teto do kore.py)
+dcPause 0
+# nao gravar no clone do OpenKore (portals.txt fica em openkore/tables)
+portalRecord 0
+logConsole 1
+verbose 1

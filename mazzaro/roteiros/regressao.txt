@@ -1,0 +1,7 @@
+# Roteiro de regressao do mazzathena (plugin mzteste no OpenKore/kro-2020; tools/mz/bot.py no kro-2026). Formato: nome | comando | espera | timeout_s
+# Conta mazzabot (group 99) e personagem no slot 0. Sem acentos (serverEncoding Western).
+entrar     | -                      | estado:ingame                      | 90
+chat       | c mzteste ping         | log:mzteste ping                   | 10
+warp_2001  | c @warp mzprtvilg00    | mapa:mzprtvilg00                   | 20
+episodio   | c @episode             | log:\[Episodios\] Midgard esta em  | 10
+volta      | c @go 0                | mapa:prontera                      | 20

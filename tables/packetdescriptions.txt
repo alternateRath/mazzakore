@@ -694,6 +694,7 @@
 0B7B Guild Info
 0B7D Guild Members List
 0B7E New Guild Member
+0B8D Repute Info
 
 [Send]
 0064 Account Server Login

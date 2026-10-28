@@ -1,0 +1,5 @@
+# Teste negativo do harness: entra, espera, e o kore.py --derrubar map@espera mata o map-server quando a espera comeca.
+# Esperado: FALHA no passo "espera" com "conexao com o map-server caiu". Se passar, o harness nao detecta quedas.
+entrar     | -                      | estado:ingame                      | 90
+espera     | -                      | tempo:20                           | 30
+chat       | c mzteste ping         | log:mzteste ping                   | 10
