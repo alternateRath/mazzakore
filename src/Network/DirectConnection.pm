@@ -286,6 +286,8 @@ sub clientSend {
 		Plugins::callHook('Network::clientSend', \%args);
 		return $args{return};
 	} else {
+		# sem cliente: o XKore 2 classico (mazzaro) guarda o fluxo de entrada para repassar quando ele chegar
+		Plugins::callHook('Network::clientSend_semCliente', { net => $self, data => $_[1] });
 		return undef;
 	}
 }

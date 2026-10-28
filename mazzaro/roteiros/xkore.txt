@@ -1,4 +1,5 @@
-# Roteiro do XKore 2 (mz kore <perfil> --xkore): o bot entra e fica no ar para o cliente grafico se conectar nele.
-# O teto e o do passo "ficar"; o bot sai sozinho no fim (ou mate o start.exe). Formato: nome | comando | espera | timeout_s
-entrar | - | estado:ingame | 90
+# Roteiro do XKore 2 (mz kore <perfil> --xkore): no modo classico (XKore_esperarCliente) o bot so entra quando o cliente
+# grafico pede login no login falso; depois fica no ar. Sai sozinho no fim (ou mate o start.exe).
+# Formato: nome | comando | espera | timeout_s
+entrar | - | estado:ingame | 900
 ficar  | - | tempo:1800    | 1860

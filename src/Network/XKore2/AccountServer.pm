@@ -19,12 +19,28 @@ use Globals;
 use Base::Ragnarok::AccountServer;
 use base qw(Base::Ragnarok::AccountServer);
 
+# Modo classico (XKore_esperarCliente): o pedido de login do cliente libera a conexao do kore e a resposta espera o
+# kore ter a lista de personagens (conta e sexo verdadeiros, sem sessao dummy)
+sub master_login {
+	my ($self, $args, $client) = @_;
+	if (Network::XKore2::esperarCliente() && !Network::XKore2::korePersonagens()) {
+		$Network::XKore2::clienteChegou = 1;
+		Log::message("[XKore 2] cliente pediu login; conectando o kore no servidor\n", 'connection');
+		Network::XKore2::adiar(\&Network::XKore2::korePersonagens,
+			sub { $self->SUPER::master_login($args, $client) }, $client);
+		return;
+	}
+	$Network::XKore2::clienteChegou = 1;
+	$self->SUPER::master_login($args, $client);
+}
+
 # Overrided method.
 sub login {
 	my ($self, $session, $username, $password_check_callback) = @_;
-	if ($char) {
-		$session->{accountID} = $char->{ID};
-		$session->{sex} = $char->{sex};
+	my $c = $char || (Network::XKore2::korePersonagens() && $chars[$config{char}]);
+	if ($c) {
+		$session->{accountID} = $accountID;
+		$session->{sex} = defined $c->{sex} ? $c->{sex} : $accountSex2;
 	} else {
 		$session->{accountID} = pack("V", 123456);
 		$session->{sex} = 0;

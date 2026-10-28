@@ -56,12 +56,25 @@ python tools\mz\visual.py kro-2026 --xkore --manter            # loga com o user
 - **Visto em jogo**: login, servidor "MazzaRO XKore", escolha de personagem e mapa no cliente 2026. Cliente → bot →
   servidor: chat e `@warp mzprtvilg00` (o cliente carregou a zona de 2001). Bot → cliente: o roteiro `xkore-demo`
   fala e anda (`move 150 170`) e o cliente mostra o chat e o personagem andando. O bot vê o que o cliente faz.
-- **`XKore_ressincronia 0`** (o `kore.py --xkore` liga): ao entrar, o `MapServer` só manda `ZC_NOTIFY_ACTORINIT
-  0x0B1B` (sem ele o cliente 2026 carrega o mapa e ignora teclado e mouse). A ressincronia original (`send_player_info`,
-  `send_inventory`, atores, skills, amigos…) empacota à mão formatos antigos (`01D7` de 11 bytes, `00A4`, `010F`,
-  `0078`…) e o cliente 2026 trava/fecha no primeiro que não bate. Sem ela, o cliente só vê o que chegar do servidor
-  depois de entrar: NPCs/monstros já parados em volta não aparecem até se mexerem ou o mapa mudar, inventário vazio
-  até atualizar. Depois de um `@warp` pelo cliente o sprite do próprio personagem sumiu (só a barra de HP).
+- **Modo clássico, `XKore_esperarCliente 1`** (padrão do `kore.py --xkore`, 2026-10-28). O bot sobe com os servidores
+  falsos e **não conecta** no MazzaRO até o cliente pedir login:
+  1. o pedido de login do cliente libera a conexão do kore (gancho `checkConnection`); a resposta do login falso
+     espera o kore ter a lista de personagens (conta e sexo verdadeiros, sem sessão dummy);
+  2. a escolha de personagem no char falso espera o kore receber o `ZC_ACCEPT_ENTER`;
+  3. o kore **não** manda o próprio `LoadEndAck` na primeira entrada (como no XKore 1);
+  4. o rAthena manda atores, status e inventário junto com o `ZC_ACCEPT_ENTER`, antes do `LoadEndAck`, quando o
+     cliente ainda escolhe personagem: o XKore 2 guarda esse fluxo (gancho novo `Network::clientSend_semCliente` no
+     `DirectConnection`) e o repassa quando o cliente termina de carregar o mapa; o `LoadEndAck` do cliente segue
+     para o servidor, que manda o resto (`ZC_NOTIFY_ACTORINIT` etc.) já com o cliente conectado.
+
+  **Visto em jogo:** o bot ficou parado sem conexão com o rAthena até o login do cliente; o cliente 2026 entrou já com
+  NPCs em volta, peso 61/2030 e o inventário (3 Poções Vermelhas, Faca) sem refresh nem ressincronia; o `mzctl`
+  seguiu comandando (andar visto no cliente). Pacotes originais do servidor, então nada no formato antigo.
+- **`XKore_ressincronia 0`** vale para o cliente que conecta com o kore **já no jogo** (reconexão, ou modo clássico
+  desligado): o `MapServer` só manda `ZC_NOTIFY_ACTORINIT 0x0B1B` (sem ele o cliente 2026 ignora teclado e mouse). A
+  ressincronia original (`send_player_info`, `send_inventory`, atores…) empacota à mão formatos antigos (`01D7` de 11
+  bytes, `00A4`, `010F`, `0078`…) que derrubam o 2026. Nesse caso o cliente só vê o que chegar depois de entrar; um
+  `@refresh` do bot (`mz kore-cmd "c @refresh"`, conta GM) faz o servidor reenviar tudo no formato 2026 (visto).
 - Correções para o 2026: `packet_lut` do serverType (`0AC4`, `082D`, `09A0`, `0B72`, `0AC5`, `08B9`); o char falso
   trata `0B72` como `099D`; login e char falsos **não fecham** a conexão depois de responder (o cliente 2026 vê o
   fechamento como "Desconectado do servidor"; era uma corrida); sessão nunca 0 (o cliente não segue com
@@ -106,8 +119,8 @@ python tools\mz\visual.py kro-2026 --xkore --manter            # loga com o user
 
 ## Não verificado
 - Combate, itens, troca, grupo e guilda pelo bot no 2026 (o OpenKore tem as rotinas; nenhum roteiro as exercita ainda).
-- XKore 2: ressincronia no formato 2026 (estado, inventário, atores em volta); fechar o diálogo de NPC no cliente
-  quando o bot encerra; perfil `kro-2020` em XKore 2.
+- XKore 2: modo clássico com o cliente saindo e voltando (o segundo login cai no caminho da reconexão, sem o fluxo
+  guardado); fechar o diálogo de NPC no cliente quando o bot encerra; perfil `kro-2020` em XKore 2.
 - mzctl: vários clientes ao mesmo tempo (atende um pedido por conexão, sem teste de concorrência); combate, loja e
   troca por comando.
 - Perfis Sabine (`alpha-2001`, `beta1-2002`): sem bloco `openkore`; o OpenKore não tem serverType para 2001-2002.

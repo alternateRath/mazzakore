@@ -15,19 +15,32 @@
 package Network::XKore2::CharServer;
 
 use strict;
-use Globals qw($char $masterServer);
+use Globals qw($char $masterServer %config);
 use Base::Ragnarok::CharServer;
 use base qw(Base::Ragnarok::CharServer);
+
+# Modo classico (XKore_esperarCliente): a escolha de personagem do cliente espera o kore receber o ZC_ACCEPT_ENTER
+# (o char_login usa $char e a posicao no mapa)
+sub char_login {
+	my ($self, $args, $client) = @_;
+	if (Network::XKore2::esperarCliente() && !Network::XKore2::koreNoMapa()) {
+		Network::XKore2::adiar(\&Network::XKore2::koreNoMapa, sub { $self->SUPER::char_login($args, $client) }, $client);
+		return;
+	}
+	$self->SUPER::char_login($args, $client);
+}
 
 # Overrided method.
 sub getCharacters {
 	my ($self, $session) = @_;
 	my @chars;
-	if (!$session->{dummy} && $char) {
+	# no modo classico o cliente ve a lista antes de o kore entrar no mapa ($char so existe depois)
+	my $c = $char || (Network::XKore2::korePersonagens() && $Globals::chars[$config{char}]);
+	if (!$session->{dummy} && $c) {
 		#for (my $i = 0; $i < 5; $i++) {
 		#	push @chars, $char;
 		#}
-		push @chars, $char;
+		push @chars, $c;
 	} else {
 		$session->{dummy} = 1;
 		for (my $i = 0; $i < 5; $i++) {

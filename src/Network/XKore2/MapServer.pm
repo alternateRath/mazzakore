@@ -196,6 +196,17 @@ sub map_loaded {
 	# Do this just in case $client->{session}{dummy} was set after
 	# the user logs in.
 	$char->{ID} = $client->{session}{accountID};
+	# Modo classico (XKore_esperarCliente): na primeira entrada o kore nao mandou o proprio LoadEndAck; o do cliente
+	# segue para o servidor (sem mangle) e o servidor manda status, inventario e atores, repassados ao cliente
+	if (Network::XKore2::esperarCliente() && !$Network::XKore2::clienteNoMapa && !$client->{session}{dummy}) {
+		$Network::XKore2::clienteNoMapa = 1;
+		Log::message("[XKore 2] cliente carregou o mapa; repassando $Network::XKore2::bufferBytes bytes da entrada; "
+			. "LoadEndAck dele vai para o servidor\n", 'connection');
+		$client->send($Network::XKore2::bufferEntrada) if $Network::XKore2::bufferBytes;
+		($Network::XKore2::bufferEntrada, $Network::XKore2::bufferBytes) = ('', 0);
+		$RunOnce = 0;
+		return;
+	}
 	# XKore_ressincronia 0 (mazzaro): nao remonta o estado (os send_* abaixo empacotam formatos antigos que derrubam
 	# o cliente kRO 2026); o cliente fica so com o que o servidor mandar dali em diante
 	if (defined $config{XKore_ressincronia} && !$config{XKore_ressincronia}) {

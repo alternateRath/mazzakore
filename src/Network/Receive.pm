@@ -1272,6 +1272,9 @@ sub map_loaded {
 		Misc::clearTeleportItemPendingUse();
 		message(T("Waiting for map to load...\n"), "connection");
 		ai_clientSuspend(0, $timeout{'ai_clientSuspend'}{'timeout'});
+	} elsif ($config{XKore} eq '2' && $config{XKore_esperarCliente} && !$Network::XKore2::clienteNoMapa) {
+		# XKore 2 classico (mazzaro): quem manda o LoadEndAck e o cliente, quando terminar de carregar o mapa
+		message "[XKore 2] esperando o cliente carregar o mapa\n", "connection";
 	} else {
 		$messageSender->sendReqRemainTime() if (grep { $masterServer->{serverType} eq $_ } qw(Zero Sakray));
 
