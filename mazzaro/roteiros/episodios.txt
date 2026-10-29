@@ -1,0 +1,23 @@
+# Motor de Episodios fase 2 (P4 do mazzaro): num episodio antigo um monstro e um item de episodio posterior nao existem;
+# num episodio novo existem. Orc Baby (1686) nasce em gef_fild10 no rAthena pre-re, mas o sprite so chega no patch do
+# 10.2 (bro-06 no mazzaro); Bradium Fragments (6084) e do 13.2. Na volta ao bro-01 (episodes/current.yml) os Orc
+# Babies vivos (os 5 do spawn e o do @monster) saem do mapa.
+# Conta mazzabot (group 99), invisivel durante o teste (@option 0 0 64 = OPTION_INVISIBLE) para os orcs nao atacarem. Formato: nome | comando | espera | timeout_s
+# Regex sem barra invertida: o motivo de falha do mzteste vai para YAML entre aspas duplas.
+entrar      | -                         | estado:ingame                                  | 90
+esconde     | c @option 0 0 64          | log:Options changed                            | 10
+ep_antigo   | c @episode set bro-01     | log:Episodios. [0-9]+ mapas fechados agora      | 15
+vai         | c @warp gef_fild10        | mapa:gef_fild10                                | 20
+assenta     | -                         | tempo:4                                        | 10
+sem_spawn   | c @episode conta 1686     | log:monstro 1686 neste mapa: 0 .ainda nao existe | 10
+sem_monster | c @monster 1686           | log:Esse monstro ainda nao existe              | 10
+sem_item    | c @item 6084              | log:Esse item ainda nao existe                 | 10
+ep_novo     | c @episode set bro-13-2   | log:Episodios. [0-9]+ mapas fechados agora      | 15
+respawn     | -                         | tempo:14                                       | 20
+com_spawn   | c @episode conta 1686     | log:monstro 1686 neste mapa: [1-9][0-9]* .existe | 10
+com_monster | c @monster 1686           | log:monsters? summoned                         | 10
+com_item    | c @item 6084              | log:Item created                               | 10
+ep_volta    | c @episode set bro-01     | log:[1-9][0-9]* monstros sairam dos mapas      | 15
+varreu      | c @episode conta 1686     | log:monstro 1686 neste mapa: 0 .ainda nao existe | 10
+volta       | c @go 0                   | mapa:prontera                                  | 20
+aparece     | c @option 0 0 0           | log:Options changed                            | 10
