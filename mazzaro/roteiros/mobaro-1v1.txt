@@ -1,0 +1,10 @@
+# MOBARO: entra na fila 1x1 e espera a partida (conta GM mazzabot; o outro jogador = mz visual com "@mobaro fila").
+# Formato: nome | comando | espera | timeout_s. Esperas por texto (nao por mapa) para nao depender do time sorteado.
+entrar    | -                   | estado:ingame                 | 90
+reset     | c @mobaro reset     | log:padrao do MOBARO          | 10
+fila      | c @mobaro fila 0    | log:Inscrito no MOBARO        | 10
+partida   | -                   | log:partida encontrada        | 180
+batalha   | -                   | log:Mate 10 monstros          | 60
+estado    | c @mobaro estado    | log:partidas em andamento     | 10
+luta      | -                   | tempo:25                      | 30
+fim       | c @endmoba          | log:MOBARO encerrado          | 30
