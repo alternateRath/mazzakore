@@ -2,9 +2,8 @@
 # Prova de partidas simultaneas: rode junto com um mz visual que tambem faz "@mobaro treino" (outra instancia).
 # O @endmoba do fim aborta TODAS as partidas (inclusive a do outro jogador): deixe-o por ultimo.
 entrar    | -                   | estado:ingame                 | 90
-reset     | c @mobaro reset     | log:padrao do MOBARO          | 10
 treino    | c @mobaro treino 0  | log:partida encontrada        | 30
-batalha   | -                   | log:Barreiras abertas          | 60
+batalha   | -                   | log:Barreiras abertas          | 30
 estado    | c @mobaro estado    | log:partidas em andamento     | 10
 luta      | -                   | tempo:25                      | 30
-fim       | c @endmoba          | log:MOBARO encerrado          | 30
+fim       | c @endmoba          | log:Personagem restaurado      | 30
