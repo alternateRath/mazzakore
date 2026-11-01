@@ -1,0 +1,7 @@
+# MOBARO: confere o kit inicial equipado no treino (mazzabot); le o @itemlist em run/logs/bot/<perfil>/pacotes.txt
+entrar    | -                   | estado:ingame                 | 90
+treino    | c @mobaro treino 0  | log:partida encontrada        | 30
+batalha   | -                   | log:Barreiras abertas          | 30
+lista     | c @itemlist         | log:inventory slots           | 10
+espera    | -                   | tempo:12                      | 20
+fim       | c @endmoba          | log:Personagem restaurado      | 30
