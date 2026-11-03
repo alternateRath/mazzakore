@@ -1,0 +1,29 @@
+# <ID do item> <0 nao pega | 1 pega | 2 pega rapido | -1 ignora>
+# IDs porque as tabelas do mazzakore (tables/mazzaro) dao os nomes em pt-BR.
+# Pega o que um iniciante juntaria; o resto fica no chao para nao estourar o peso.
+all 0
+
+501 2     # Pocao Vermelha
+502 2     # Pocao Laranja
+503 2     # Pocao Amarela
+504 2     # Pocao Branca
+601 1     # Asa de Mosca
+602 1     # Asa de Borboleta
+512 1     # Maca
+513 1     # Banana
+514 1     # Uvas
+515 1     # Cenoura
+517 1     # Carne
+578 1     # Morango
+909 1     # Jellopy
+914 1     # Felpa
+705 1     # Trevo
+935 1     # Casca
+1019 1    # Tronco
+7036 1    # Presa de Hati
+984 2     # Oridecon
+985 2     # Elunium
+756 2     # Minerio de Oridecon
+757 2     # Minerio de Elunium
+603 2     # Caixa Azul Velha
+617 2     # Velha Caixa Roxa

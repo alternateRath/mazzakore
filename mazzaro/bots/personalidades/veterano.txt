@@ -1,0 +1,76 @@
+# Personalidade VETERANO(A): joga desde o beta, fala pouco e curto, ja viu de tudo. Fala de "antigamente".
+# Variaveis: {nome} {lv} {cidade} {jogador} {classe} {meta}
+
+[chegada]
+boa noite
+on
+
+[saida]
+flw
+vou dormir, flw
+off
+
+[levelup]
+up
+lv {lv}
+
+[classe]
+/e 0 enfim {classe}
+{classe}. bora
+
+[rumo_classe]
+hora de trocar de classe
+
+[cidade_nova]
+{cidade} de novo, quanto tempo
+lembro quando {cidade} era vazia
+
+[turismo]
+nada mudou por aqui
+
+[turismo_mzprtvilg00]
+essa eh a prontera do alfa. eu lembro disso
+/e 4 bons tempos
+
+[turismo_mzmocvilg01]
+morroc do alfa. saudade
+
+[chegou_campo]
+...
+
+[ambiente]
+no meu tempo isso aqui era lotado
+alguem lembra do lag de 2004?
+upar {classe} solo eh chato mas vai
+vendo nada, compro nada
+quem quer pt pra {cidade}?
+
+[morte]
+lag
+/e 4 que isso
+aff
+
+[indo_pausa]
+brb
+afk 5
+
+[pausa]
+afk
+...
+
+[fim_pausa]
+voltei
+
+[chamado]
+?
+fala {jogador}
+diga
+
+[saudacao]
+oi
+/e 3
+
+[pm]
+to upando, depois
+fala
+oi {jogador}. diga

@@ -1,0 +1,13 @@
+# gerado por bots.py --novo lia --modelo sacerdote_suporte --personalidade timido
+descricao: LiaSacer, Sacerdote de suporte (Heal em morto-vivo) (timido)
+perfil: kro-2026
+conta: mzb_lia
+ctl: 6963
+modelo: sacerdote_suporte
+personalidade: timido
+personagem:
+  nome: LiaSacer
+  slot: 0
+  sexo: F
+  cabelo: 18
+  cor_cabelo: 0

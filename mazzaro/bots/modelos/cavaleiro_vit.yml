@@ -1,0 +1,44 @@
+# Cavaleiro VIT de lanca (tanque de Bowling Bash): iRO Wiki Classic "VIT (spear tank)": STR 80+, VIT 90-100,
+# DEX 40. Fonte: https://irowiki.org/classic/Knight
+nome: Cavaleiro VIT (lanca, Bowling Bash)
+classes: [0, 1, 7]
+troca_classe: {1: 10, 7: 45}
+stats: 9 str, 9 vit, 20 str, 20 vit, 15 dex, 40 str, 40 vit, 25 dex, 60 str, 60 vit, 35 dex, 80 str, 80 vit, 90 vit, 40 dex, 20 agi
+skills: >-
+  NV_BASIC 9, SM_BASH 5, SM_RECOVERY 5, SM_SWORD 1, SM_TWOHAND 5, SM_BASH 10, SM_MAGNUM 3, SM_RECOVERY 10,
+  SM_PROVOKE 10, SM_ENDURE 5, SM_MAGNUM 8,
+  KN_SPEARMASTERY 5, KN_TWOHANDQUICKEN 10, KN_AUTOCOUNTER 5, KN_BOWLINGBASH 10, KN_RIDING 1,
+  KN_CAVALIERMASTERY 3, KN_PIERCE 5, KN_SPEARMASTERY 10
+config: |
+  attackSkillSlot SM_BASH {
+  	lvl 5
+  	dist 1.5
+  	sp > 40%
+  	maxAttempts 2
+  }
+  attackSkillSlot KN_BOWLINGBASH {
+  	lvl 10
+  	dist 1.5
+  	sp > 25%
+  }
+  attackSkillSlot KN_PIERCE {
+  	lvl 5
+  	dist 2
+  	sp > 50%
+  	maxAttempts 2
+  }
+  useSelf_skill SM_PROVOKE {
+  	lvl 10
+  	sp > 60%
+  	disabled 1
+  }
+etapas:
+  - 1 12 0 prt_fild08 prontera
+  - 1 18 1 prt_fild08 prontera
+  - 19 28 1 pay_dun00 payon
+  - 29 40 1 orcsdun01 geffen
+  - 41 99 1 orcsdun01 geffen
+  - 1 55 7 orcsdun01 geffen
+  - 56 70 7 mjo_dun03 aldebaran      # Mina de Carvao 3
+  - 71 85 7 orcsdun02 geffen
+  - 86 99 7 alde_dun02 aldebaran     # Torre do Relogio B2: High Orc

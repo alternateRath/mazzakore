@@ -6,7 +6,11 @@ Uso (da pasta do mazzakore, <ws>\\openkore):
   python -I mazzaro\\bots\\bots.py aldren --oculto        # sem janela (log em run\\logs\\bots\\aldren)
   python -I mazzaro\\bots\\bots.py aldren --esperar       # fica esperando o OpenKore sair
   python -I mazzaro\\bots\\bots.py --listar               # bots disponiveis
-  python -I mazzaro\\bots\\bots.py --criar-conta aldren   # cria a conta no banco local (ver servidor\\README.md)
+  python -I mazzaro\\bots\\bots.py --criar-conta aldren   # cria a conta no banco local (grupo 5 = Bot, senha MD5)
+  python -I mazzaro\\bots\\bots.py --modelos              # modelos de build e personalidades
+  python -I mazzaro\\bots\\bots.py --validar              # confere os modelos contra a skill_tree do mazzathena
+  python -I mazzaro\\bots\\bots.py --novo bia --modelo bruxo_intdex --personalidade empolgada --sexo F \\
+                                    --horario "19:00-23:30"   # cria mazzaro\\bots\\bia\\ (depois --criar-conta e subir)
 
 Cada bot e uma pasta mazzaro\\bots\\<bot>\\ com bot.yml (perfil, conta, personagem) e control\\ (config.txt so com
 o que muda sobre o padrao, jornada.txt, falas.txt, mon_control.txt, pickupitems.txt).
@@ -38,6 +42,9 @@ MZ = WS / 'mazzaro'                               # repo mazzaro (perfis, tools)
 NO_WINDOW, NEW_CONSOLE = 0x08000000, 0x10
 PLUGINS = 'mazzaJornada,raiseStat,raiseSkill,mzctl'
 CTL_BASE = 6960                                   # mzctl de cada bot: bot.yml "ctl:" ou 6960 + posicao na lista
+
+sys.path.insert(0, str(BOTS))                     # com python -I a pasta do script nao entra no path
+import gerar  # noqa: E402  (mazzaro/bots/gerar.py: modelos e personalidades)
 
 sys.path.insert(0, str(MZ / 'tools' / 'mz'))
 try:
@@ -110,6 +117,25 @@ def sobrepor(texto, valores):
     return '\n'.join(linhas) + '\n'
 
 
+# o que um jogador guarda em vez de vender (o resto vai para o Tool Dealer da cidade-base)
+GUARDA = {501: 0, 502: 0, 503: 0, 504: 0, 505: 0, 506: 0, 601: 0, 602: 0, 717: 0, 716: 0, 715: 0, 1750: 0,
+          984: 0, 985: 0, 756: 0, 757: 0, 603: 0, 617: 0, 644: 0, 7059: 0}
+
+
+def items_control():
+    """items_control.txt do bot: vende o loot, guarda pocao/asa/gema/flecha/minerio/caixa e todas as cartas."""
+    linhas = ['# GERADO por mazzaro/bots/bots.py: <item> <minimo> <guardar> <vender>', 'all 0 0 1']
+    linhas += [f'{i} 0 0 0' for i in GUARDA]
+    db = WS / 'rathena-2026' / 'db' / 'pre-re' / 'item_db_etc.yml'
+    try:
+        body = yaml.safe_load(db.read_text(encoding='utf-8'))['Body']
+        linhas += [f'{i["Id"]} 0 0 0' for i in body if i.get('Type') == 'Card']
+    except OSError:
+        pass
+    # equipamento que dropa vai para a loja tambem (o OpenKore nao vende o que esta equipado)
+    return '\n'.join(linhas) + '\n'
+
+
 def server_block(prof, name):
     """Mesmo bloco que o tools/mz/kore.py do mazzaro gera para o perfil."""
     ok = prof['openkore']
@@ -170,6 +196,7 @@ def preparar(nome, bot, prof):
             'sendAnonymousStatisticReport': 0, 'wxHideConsole': 0}
     padrao = (KORE / 'control' / 'sys.txt').read_text(encoding='utf-8', errors='replace')
     (ctl / 'sys.txt').write_text(sobrepor(padrao, sysv), encoding='utf-8')
+    (ctl / 'items_control.txt').write_text(items_control(), encoding='utf-8')
     (tbl / 'servers.txt').write_text(server_block(prof, server_name), encoding='utf-8')
     return ctl, tbl, logs
 
@@ -238,8 +265,36 @@ def main():
     ap.add_argument('--esperar', action='store_true', help='espera o OpenKore sair (um bot so)')
     ap.add_argument('--listar', action='store_true')
     ap.add_argument('--criar-conta', metavar='BOT')
-    ap.add_argument('--grupo', type=int, default=5, help='group_id da conta (padrao 5 = Bot, servidor\\groups.yml)')
+    ap.add_argument('--grupo', type=int, default=5, help='group_id da conta (padrao 5 = Bot, conf/import/groups.yml)')
+    ap.add_argument('--novo', metavar='BOT', help='cria mazzaro/bots/<BOT> de um modelo (com --modelo e --personalidade)')
+    ap.add_argument('--modelo')
+    ap.add_argument('--personalidade')
+    ap.add_argument('--sexo', choices=['M', 'F'])
+    ap.add_argument('--personagem', help='nome do personagem (padrao: o do bot com inicial maiuscula)')
+    ap.add_argument('--horario', help='janelas de jogo, ex. "19:00-23:30 12:00-13:00" (padrao: sempre online)')
+    ap.add_argument('--validar', nargs='*', metavar='MODELO', help='confere modelos contra a skill_tree (sem nome: todos)')
+    ap.add_argument('--modelos', action='store_true', help='lista modelos e personalidades')
     a = ap.parse_args()
+    if a.modelos:
+        for mid in gerar.modelos_disponiveis():
+            print(f'{mid:20} {gerar.carregar_modelo(mid)["nome"]}')
+        print('personalidades:', ', '.join(gerar.personalidades_disponiveis()))
+        return
+    if a.validar is not None:
+        ruim = 0
+        for mid in a.validar or gerar.modelos_disponiveis():
+            erros = gerar.validar(mid)
+            graves = [e for e in erros if not e.endswith('(aviso)')]
+            ruim += bool(graves)
+            print(f'{mid}: {"ok" if not graves else "PROBLEMAS"}' + ''.join(f'\n  - {e}' for e in erros))
+        sys.exit(1 if ruim else 0)
+    if a.novo:
+        if not (a.modelo and a.personalidade):
+            ap.error('--novo pede --modelo e --personalidade (veja --modelos)')
+        dst, bot = gerar.novo(a.novo, a.modelo, a.personalidade, a.sexo, a.personagem, a.horario)
+        print(f'{dst} criado: {bot["descricao"]}, conta {bot["conta"]}, mzctl {bot["ctl"]}')
+        print(f'  agora: python -I mazzaro\\bots\\bots.py --criar-conta {a.novo}  e  python -I mazzaro\\bots\\bots.py {a.novo}')
+        return
     if a.listar:
         for n in bots_disponiveis():
             b = carregar_bot(n)

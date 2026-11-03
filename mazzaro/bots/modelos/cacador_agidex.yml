@@ -1,0 +1,50 @@
+# Cacador AGI/DEX: o "DEX/AGI PowerHouse" da iRO Wiki Classic (DEX 99, AGI 99 base, INT 9).
+# Double Strafe e flechas; armadilha de tornozelo nos rapidos. Fonte: https://irowiki.org/classic/Hunter
+nome: Cacador AGI/DEX (Double Strafe)
+classes: [0, 3, 11]         # Aprendiz -> Arqueiro -> Cacador
+troca_classe: {3: 10, 11: 45}
+stats: 9 dex, 9 agi, 20 dex, 15 agi, 40 dex, 30 agi, 60 dex, 50 agi, 80 dex, 70 agi, 99 dex, 90 agi, 99 agi, 9 int
+skills: >-
+  NV_BASIC 9, AC_OWL 3, AC_VULTURE 1, AC_DOUBLE 5, AC_OWL 10, AC_DOUBLE 10, AC_VULTURE 10, AC_CONCENTRATION 10,
+  AC_SHOWER 9,
+  HT_SKIDTRAP 1, HT_ANKLESNARE 5, HT_BEASTBANE 1, HT_FALCON 1, HT_BLITZBEAT 5, HT_STEELCROW 10, HT_DETECTING 4,
+  HT_LANDMINE 1, HT_REMOVETRAP 1, HT_SPRINGTRAP 5, HT_BEASTBANE 10
+config: |
+  attackDistance 9
+  attackMaxDistance 9
+  attackDistanceAuto 1
+  runFromTarget 1
+  runFromTarget_dist 4
+  autoSwitch_default_arrow 1750
+  attackSkillSlot AC_DOUBLE {
+  	lvl 10
+  	dist 9
+  	sp > 20%
+  }
+  useSelf_skill AC_CONCENTRATION {
+  	lvl 10
+  	sp > 50%
+  	whenStatusInactive EFST_CONCENTRATE
+  	aggressives > 1
+  	onAction attack
+  }
+  # flechas comuns na loja da cidade-base (Payon vende a 1750)
+  buyAuto 1750 {
+  	npc
+  	standpoint
+  	distance 3
+  	minAmount 200
+  	maxAmount 1500
+  	zeny > 1500
+  	disabled 1
+  	mazzaLoja 1
+  }
+etapas:
+  - 1 12 0 prt_fild08 prontera
+  - 1 18 3 pay_fild07 payon          # floresta de Payon: Willow, Spore
+  - 19 30 3 pay_fild04 payon
+  - 31 99 3 mjolnir_11 payon         # Flora, Mandragora
+  - 1 50 11 pay_fild10 payon         # Grande General
+  - 51 65 11 cmd_fild01 payon        # Floresta de Papuchicha: Alligator, Savage
+  - 66 80 11 c_tower2 aldebaran
+  - 81 99 11 gl_sew03 geffen

@@ -1,0 +1,28 @@
+# <monstro|ID> <atacar> <teleport> <teleport_search> <skillcancel> <lv> <joblv> <hp> <sp> <weight>
+# atacar: 0 = ignorar | 1 = atacar | 2 = so se ele atacar | 3 = atacar sempre que vir
+# IDs do mob_db (os nomes podem vir traduzidos das tabelas pt-BR). Ignora o que um jogador comum ignoraria.
+
+1008 0 0 0     # Pupa
+1097 0 0 0     # Ant Egg
+1048 0 0 0     # Thief Bug Egg
+1047 0 0 0     # Peco Peco Egg
+1078 0 0 0     # Red Plant
+1079 0 0 0     # Blue Plant
+1080 0 0 0     # Green Plant
+1081 0 0 0     # Yellow Plant
+1082 0 0 0     # White Plant
+1083 0 0 0     # Shining Plant
+1084 0 0 0     # Black Mushroom
+1085 0 0 0     # Red Mushroom
+
+# Mais fortes que a etapa - so se defende
+1262 2 0 0     # Mutant Dragonoid
+1289 2 0 0     # Maya Purple (anthell01)
+1190 2 0 0     # Orc Lord
+1087 2 0 0     # Orc Hero
+1121 2 0 0     # Giearth (anthell01)
+1102 2 0 0     # Bathory (c_tower1)
+1270 2 0 0     # Clock Tower Manager
+1219 2 0 0     # Abysmal Knight (gl_knt01)
+1275 2 0 0     # Alice
+1186 2 0 0     # Giant Whisper

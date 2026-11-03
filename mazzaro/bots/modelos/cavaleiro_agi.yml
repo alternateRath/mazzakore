@@ -1,0 +1,50 @@
+# Cavaleiro AGI de espada de duas maos: o "AGI Knight" classico (iRO Wiki Classic: STR 90-100, AGI 80-99,
+# VIT 10-30, DEX 40-60). Fonte: https://irowiki.org/classic/Knight
+nome: Cavaleiro AGI (duas maos)
+classes: [0, 1, 7]          # Aprendiz -> Espadachim -> Cavaleiro
+troca_classe: {1: 10, 7: 50}  # job level minimo em que ele vai ao instrutor
+stats: 9 str, 9 agi, 20 agi, 20 str, 10 vit, 40 agi, 40 str, 20 dex, 60 agi, 60 str, 25 vit, 30 dex, 80 agi, 80 str, 90 agi, 90 str, 40 dex, 30 vit
+skills: >-
+  NV_BASIC 9, SM_BASH 5, SM_SWORD 1, SM_TWOHAND 5, SM_RECOVERY 5, SM_BASH 10, SM_MAGNUM 3, SM_TWOHAND 10,
+  SM_RECOVERY 10, SM_PROVOKE 5, SM_ENDURE 3, SM_MAGNUM 10,
+  KN_TWOHANDQUICKEN 10, KN_AUTOCOUNTER 5, KN_RIDING 1, KN_CAVALIERMASTERY 5, KN_BOWLINGBASH 10,
+  KN_SPEARMASTERY 10, KN_PIERCE 5, KN_SPEARSTAB 3
+config: |
+  attackSkillSlot SM_BASH {
+  	lvl 5
+  	dist 1.5
+  	sp > 30%
+  	maxAttempts 3
+  }
+  attackSkillSlot SM_MAGNUM {
+  	lvl 5
+  	dist 1.5
+  	sp > 40%
+  	aggressives > 2
+  }
+  attackSkillSlot KN_BOWLINGBASH {
+  	lvl 10
+  	dist 1.5
+  	sp > 35%
+  	aggressives > 1
+  }
+  useSelf_skill SM_ENDURE {
+  	lvl 1
+  	sp > 30%
+  	whenStatusInactive EFST_ENDURE
+  	aggressives > 1
+  	onAction attack
+  	inLockOnly 1
+  }
+# etapa <lvMin> <lvMax> <classes> <mapa> <cidade-base>  (mapas do bro-01; o plugin pula mapa fechado pelo episodio)
+etapas:
+  - 1 12 0 prt_fild08 prontera        # Poring, Lunatic, Fabre
+  - 1 17 1 prt_fild08 prontera
+  - 18 26 1 pay_dun00 payon           # Zumbi, Esqueleto
+  - 27 35 1 prt_sewb2 prontera        # esgoto: Thief Bug, Tarou
+  - 36 45 1 orcsdun01 geffen          # Orc Zombie, Orc Skeleton
+  - 46 99 1 orcsdun02 geffen
+  - 1 60 7 orcsdun01 geffen
+  - 61 70 7 in_sphinx3 morocc         # Pasana, Marduk
+  - 71 80 7 orcsdun02 geffen
+  - 81 99 7 gl_knt01 geffen           # Raydric, Khalitzburg

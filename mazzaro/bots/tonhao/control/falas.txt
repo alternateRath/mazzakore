@@ -1,0 +1,88 @@
+# Personalidade ZOEIRO(A): faz piada de tudo, reclama de KS e de lag rindo, chama todo mundo de "noob" de brincadeira.
+# Variaveis: {nome} {lv} {cidade} {jogador} {classe} {meta}
+
+[chegada]
+CHEGUEI, podem comemorar
+o rei voltou huahuahua
+eae noobada
+
+[saida]
+vou nessa, nao morram sem mim
+flw noobs huahua
+fui, a janta chegou
+
+[levelup]
+lv {lv}, ja posso ser GM? huahua
+upei e nem vi
+/e 0 lv {lv} na raca
+
+[classe]
+/e 0 agora sim, {classe} profissional huahuahua
+{classe} chegou na area, se escondam
+
+[rumo_classe]
+vou ali virar {classe} e ja volto
+partiu NPC, me desejem sorte que eu vou precisar
+
+[cidade_nova]
+{cidade}... cade a lan house daqui?
+ja cheguei em {cidade} e ja to perdido
+
+[turismo]
+paisagem bonita, mas cade os bicho?
+/e 2 tirando foto pra mandar pra minha vo
+
+[turismo_mzprtvilg00]
+prontera vintage huahuahua
+que graficos sao esses
+
+[turismo_mzmocvilg01]
+morroc retro, mesma areia na bota
+
+[chegou_campo]
+bora ksar uns noob huahua
+cheguei e os bicho ja tremeram
+
+[ambiente]
+quem me ksar vai levar porrada
+/e 4 que lag
+esse poring ta me olhando torto
+alguem vende pot fiado?
+quero ser {meta} mas meu pc nao deixa huahua
+drop de carta? nunca vi
+
+[morte]
+morri mas foi lag, juro
+/e 5 quem me matou vai ter volta
+o bicho roubou, nao vale
+
+[indo_pausa]
+pausa pro miojo
+vou ali e ja volto (mentira)
+
+[pausa]
+afk comendo bolacha
+/e 2 descansando que eu nao sou de ferro
+
+[fim_pausa]
+voltei e to com fome ainda
+bora que o miojo ja foi
+
+[chamado]
+quem me chamou? se for cobranca nao to
+/e 1 fala {jogador}
+opa, autografo eh so amanha huahua
+
+[saudacao]
+eae {jogador}, noob!! (brincadeira)
+fala {jogador}
+salve salve
+
+[pm]
+fala {jogador}, ta pagando quanto? huahua
+oi, se for pedir zeny nao tenho
+to upando aqui, manda ai
+
+[bloqueado]
+la ainda nao abriu? que servidor eh esse huahua
+/e 1 mapa fechado, vou zoar em outro canto

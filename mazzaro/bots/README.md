@@ -9,6 +9,9 @@ descansam na cidade e conversam. Rodam no mazzakore (serverType `kRO_RagexeRE_20
 | Bot | Quem é | Perfil |
 |---|---|---|
 | [`aldren`](aldren/) | garoto de uma fazenda perto de Prontera que quer ser Cavaleiro e conhecer Rune-Midgard | kro-2026 |
+| [`bia`](bia/) | Biazinha, `bruxo_intdex`, personalidade `empolgado` (gerada) | kro-2026 |
+| [`tonhao`](tonhao/) | Tonhao, `ferreiro_batalha`, personalidade `zoeiro` (gerado) | kro-2026 |
+| [`lia`](lia/) | LiaSacer, `sacerdote_suporte`, personalidade `timido`, horario 00:00-23:59 (gerada) | kro-2026 |
 
 ### Jornada do Aldren
 | Nível base | Classe | Onde treina | Cidade base |
@@ -36,7 +39,7 @@ python -I mazzaro\bots\bots.py aldren                  # abre o OpenKore do Aldr
 python -I mazzaro\bots\bots.py --listar
 ```
 - `bots.py` gera em `<ws>\run\bots\<bot>\` o `config.txt` (dois `!include`: o padrão do clone e o
-  `control\config.txt` do bot, mais conta e personagem do `bot.yml`), o `sys.txt` (plugins `mazzaJornada,raiseStat,raiseSkill`)
+  `control\config.txt` do bot, mais conta e personagem do `bot.yml`), o `sys.txt` (plugins `mazzaJornada,raiseStat,raiseSkill,mzctl`)
   e o `servers.txt` (o mesmo bloco do `tools\mz\kore.py`). Nada é escrito no clone.
 - Recusa subir se o perfil no ar não for o do bot (lido do `tools\mz\profiles.py` do mazzaro).
 - Logs e o estado da jornada (`jornada_<personagem>.txt`: cidades visitadas, Kafras, turismo) em
@@ -45,10 +48,26 @@ python -I mazzaro\bots\bots.py --listar
 
 No console do OpenKore: `jornada` (estado), `jornada pausa`, `jornada retomar`, `jornada reset`.
 
-## Novo bot
-1. Copiar `aldren\` para `<nome>\`, trocar `bot.yml` (conta, personagem).
-2. Reescrever `control\jornada.txt` (etapas, classes, turismo) e `control\falas.txt` (personalidade).
-3. Ajustar `control\config.txt` (build, skills, poções). Só o que muda sobre o padrão.
+## Novo bot (gerador)
+```
+python -I mazzaro\bots\bots.py --modelos       # modelos de build e personalidades
+python -I mazzaro\bots\bots.py --validar       # modelos contra a skill_tree pre-renewal do mazzathena
+python -I mazzaro\bots\bots.py --novo bia --modelo bruxo_intdex --personalidade empolgado --sexo F --horario "19:00-23:30"
+python -I mazzaro\bots\bots.py --criar-conta bia
+```
+- **Modelos** (`modelos/<id>.yml`): caminho de classes, troca de classe, stats, skills (na ordem em que se gasta),
+  blocos de skill do OpenKore e etapas de treino. Fonte de cada build no topo do arquivo (iRO Wiki Classic).
+  A parte comum fica em `modelos/_base/` (config, mon_control, pickupitems, turismo/lojas/cidades).
+- **Personalidades** (`personalidades/<p>.txt`): `empolgado`, `veterano`, `zoeiro`, `timido`. Seções como no
+  `falas.txt` do Aldren, mais `[chegada]` e `[saida]` (sessões) e as variáveis `{classe}` e `{meta}`.
+- O `--validar` simula o `raiseSkill`: pré-requisito fora de ordem ou pontos sobrando na hora da troca de classe
+  (o bot fica parado e o NPC recusa) viram erro. `--novo` recusa modelo com erro.
+- `--horario "HH:MM-HH:MM ..."`: o bot só joga nessas janelas; entra, joga 50-150 min, se despede e faz
+  `relog` até a próxima entrada. Sem horário, fica sempre on.
+- O `items_control.txt` é gerado em `run\bots\<bot>\control`: vende o loot no Tool Dealer da cidade-base
+  (linhas `loja`) e guarda poção, asa, gema, flecha, minério, caixa e todas as cartas.
+
+Bot feito à mão: copiar `aldren\`, trocar `bot.yml` (conta, personagem, `ctl`) e reescrever o `control\`.
 
 ### jornada.txt
 ```
@@ -81,5 +100,8 @@ Cada bot carrega o plugin `mzctl` numa porta própria (`ctl:` no `bot.yml`, sen�
 
 ## Verificado (2026-11-03, kro-2026 local)
 Conta criada, login, criação do personagem no slot vazio e entrada automática no mapa; `raiseStat` distribuindo;
-turismo na fonte de Prontera com fala; rota até o Historiador para a Prontera de 2001. Ainda não visto: volta pelo
-Eco, Kafra salvando, treino em campo, mudança de classe pelos instrutores, `raiseSkill` depois da classe nova.
+turismo na fonte de Prontera com fala; ida às zonas de 2001 pelo Historiador e volta pelo Eco do presente; 4 bots
+juntos (Aldren + 3 gerados) com as falas de cada personalidade e cumprimentos entre eles; ouvem os moradores das
+cidades (mazzathena) no chat. Corrigido no teste: `getItems` da Kafra (derrubava o bot), `/e` nas respostas.
+Ainda não visto: Kafra salvando, treino em campo por horas, mudança de classe pelos instrutores, `raiseSkill`
+depois da classe nova, venda/compra na loja, sessão por horário com `relog`.

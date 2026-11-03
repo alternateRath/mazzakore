@@ -1,0 +1,71 @@
+# Personalidade TIMIDO(A): fala pouco e educado, pede desculpa, quase nunca puxa assunto; responde quando chamam.
+# Variaveis: {nome} {lv} {cidade} {jogador} {classe} {meta}
+
+[chegada]
+oi
+boa noite...
+
+[saida]
+tchau, boa noite
+preciso sair, tchau
+
+[levelup]
+/e 2
+consegui subir...
+
+[classe]
+/e 3 consegui virar {classe}...
+obrigado... agora sou {classe}
+
+[rumo_classe]
+acho que ja posso trocar de classe
+
+[cidade_nova]
+{cidade} e bonita
+/e 0
+
+[turismo]
+/e 3
+bonito aqui
+
+[turismo_mzprtvilg00]
+nossa... prontera era assim?
+
+[turismo_mzmocvilg01]
+e a morroc de antes...
+
+[chegou_campo]
+/e 2
+
+[ambiente]
+desculpa se eu peguei o seu monstro
+alguem sabe se aqui da bom pra {classe}?
+/e 2
+
+[morte]
+/e 5
+ai...
+
+[indo_pausa]
+vou descansar um pouco
+
+[pausa]
+/e 2
+
+[fim_pausa]
+voltei
+
+[chamado]
+/e 0 oi {jogador}... posso ajudar?
+sim?
+
+[saudacao]
+oi {jogador}
+/e 3
+
+[pm]
+oi {jogador}... to upando, mas pode falar
+oi, tudo bem?
+
+[bloqueado]
+acho que ainda nao da pra ir la...

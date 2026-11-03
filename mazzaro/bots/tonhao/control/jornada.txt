@@ -1,0 +1,44 @@
+# Tonhao - Ferreiro de batalha (machado) - gerado de modelos/ferreiro_batalha.yml (editar a vontade)
+
+etapa 1 12 0 prt_fild08 prontera
+etapa 1 20 5 prt_fild08 prontera
+etapa 21 32 5 prt_sewb2 prontera
+etapa 33 99 5 orcsdun01 geffen
+etapa 1 55 10 orcsdun01 geffen
+etapa 56 70 10 xmas_dun02 alberta
+etapa 71 85 10 alde_dun04 aldebaran
+etapa 86 99 10 alde_dun02 aldebaran
+
+classe 0 5 10 alberta_in 56 39 c r0 c
+classe 5 10 50 geffen 44 162 c r0 c
+
+# -----------------------------------------------------------------------------
+# Parte comum (mazzaro/bots/modelos/_base/jornada_comum.txt): turismo, lojas e cidades.
+# ponto <cidade> <mapa> <x> <y> [volta <x> <y> <sequencia>]  - 1a vez que passa pela cidade
+# As zonas de 2001 se alcancam pelo Historiador (prontera 147,189); volta pelo "Eco do presente".
+# -----------------------------------------------------------------------------
+ponto prontera  prontera     156 185                     # fonte central
+ponto prontera  mzprtvilg00  100 102  volta 100 104 r0   # Prontera de 2001 (castelo), pelo Historiador
+ponto prontera  mzmocvilg01  100 100  volta 100 102 r0   # Vila de Morroc de 2001
+ponto izlude    izlude       128 110                     # centro de Izlude
+ponto payon     payon        160 225                     # vila de Payon
+ponto morocc    morocc       160  96                     # oasis de Morroc
+ponto geffen    geffen       119 105                     # base da Torre de Geffen
+ponto aldebaran aldebaran    140 115                     # torre do relogio vista de fora
+ponto alberta   alberta      116  57                     # porto de Alberta
+
+# loja <cidade> <mapa> <x> <y>: Tool Dealer do rAthena (npc/merchants/shops.txt) - vende o loot, compra pocao
+loja prontera  prt_in      126  76
+loja izlude    izlude_in   115  61
+loja payon     payon       159  96
+loja morocc    moc_ruins    91 128
+loja geffen    geffen_in    77 167
+loja alberta   alberta_in  182  97
+loja aldebaran aldeba_in    94  56
+
+# Mapas que contam como cidade (pausas, Kafra)
+cidade prontera izlude payon morocc geffen aldebaran alberta
+
+opcao chance_fala_ambiente 6
+opcao pausa_a_cada_min 49
+opcao pausa_a_cada_max 91

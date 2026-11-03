@@ -1,0 +1,48 @@
+# Sacerdote de batalha (STR/AGI com maca): muito comum em 2004 entre quem upava sozinho.
+# iRO Wiki Classic cita "STR/AGI/DEX" e "AGI/DEX" sem numeros; os numeros sao nossos.
+# Fonte: https://irowiki.org/classic/Priest
+nome: Sacerdote de batalha (maca)
+classes: [0, 4, 8]          # Aprendiz -> Novico -> Sacerdote
+troca_classe: {4: 10, 8: 45}
+stats: 9 str, 9 agi, 20 str, 20 agi, 10 dex, 40 str, 40 agi, 20 dex, 60 str, 60 agi, 15 vit, 30 dex, 80 str, 80 agi, 20 int, 40 dex
+skills: >-
+  NV_BASIC 9, AL_HEAL 3, AL_DP 5, AL_INCAGI 5, AL_BLESSING 5, AL_DP 10, AL_DEMONBANE 10, AL_INCAGI 10,
+  AL_BLESSING 10, AL_RUWACH 1, AL_TELEPORT 2, AL_ANGELUS 2,
+  PR_MACEMASTERY 10, PR_IMPOSITIO 5, PR_KYRIE 10, PR_SUFFRAGIUM 3, PR_STRECOVERY 1, PR_SLOWPOISON 4,
+  PR_MAGNIFICAT 3, PR_GLORIA 5, PR_MAGNIFICAT 5, PR_LEXDIVINA 2
+config: |
+  useSelf_skill AL_BLESSING {
+  	lvl 10
+  	sp > 25%
+  	whenStatusInactive EFST_BLESSING
+  	inLockOnly 1
+  	notWhileSitting 1
+  }
+  useSelf_skill AL_INCAGI {
+  	lvl 10
+  	sp > 25%
+  	whenStatusInactive EFST_INC_AGI
+  	inLockOnly 1
+  	notWhileSitting 1
+  }
+  useSelf_skill PR_IMPOSITIO {
+  	lvl 5
+  	sp > 40%
+  	whenStatusInactive EFST_IMPOSITIO
+  	onAction attack
+  	inLockOnly 1
+  }
+  useSelf_skill AL_HEAL {
+  	lvl 3
+  	hp < 50%
+  	sp > 15%
+  }
+etapas:
+  - 1 12 0 prt_fild08 prontera
+  - 1 18 4 prt_fild08 prontera
+  - 19 30 4 pay_dun00 payon          # mortos-vivos: Demon Bane brilha aqui
+  - 31 99 4 orcsdun01 geffen
+  - 1 50 8 orcsdun01 geffen
+  - 51 65 8 gl_chyard geffen         # Cemiterio de Glast Heim
+  - 66 80 8 in_sphinx4 morocc        # Anubis (em grupo, na vida real)
+  - 81 99 8 gl_church geffen

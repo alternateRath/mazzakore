@@ -36,6 +36,9 @@ use AI;
 use Skill;
 
 my $NAME = 'mazzaJornada';
+# nomes do bRO (2004), sem acento (serverEncoding Western)
+my %JOBNOME = (0 => 'aprendiz', 1 => 'espadachim', 2 => 'mago', 3 => 'arqueiro', 4 => 'novico', 5 => 'mercador',
+	6 => 'gatuno', 7 => 'cavaleiro', 8 => 'sacerdote', 9 => 'bruxo', 10 => 'ferreiro', 11 => 'cacador', 12 => 'mercenario');
 Plugins::register($NAME, 'Jornada roleplay dos bots do MazzaRO', \&unload, \&unload);
 
 my $hooks = Plugins::addHooks(
@@ -55,7 +58,7 @@ sub unload {
 }
 
 # ---------------------------------------------------------------- dados ----
-my (@etapas, @classes, %pontos, %falas, %opt, %cidades);
+my (@etapas, @classes, %pontos, %falas, %opt, %cidades, %lojas, @horarios);
 my $loaded = 0;
 
 # ---------------------------------------------------------------- estado ---
@@ -68,10 +71,11 @@ my ($lastTick, $lastLv, $lastJobLv, $lastJob, $lastMap, $wasDead) = (0);
 my ($lastPublic, $nextBreak, $lastMoveCmd) = (0, 0, 0);
 my (@pending, %lastReplyTo);
 my ($criouEm, $criacoes) = (0, 0);
+my $sessaoFim;             # fim da sessao de jogo atual (horario); undef = ainda nao comecou
 
 # =============================================================== leitura ===
 sub loadData {
-	@etapas = (); @classes = (); %pontos = (); %falas = (); %cidades = ();
+	@etapas = (); @classes = (); %pontos = (); %falas = (); %cidades = (); %lojas = (); @horarios = ();
 	%opt = (
 		chance_fala_ambiente => 4,      # % por minuto em campo
 		intervalo_fala       => 180,    # segundos minimos entre falas publicas
@@ -84,6 +88,9 @@ sub loadData {
 		resposta_delay_min   => 6,
 		resposta_delay_max   => 22,
 		bloqueio_horas       => 6,      # depois disso tenta de novo o mapa fechado
+		sessao_min           => 50,     # minutos de jogo por sessao dentro da janela de horario
+		sessao_max           => 150,
+		atraso_entrada_max   => 40,     # minutos de atraso aleatorio para entrar depois que a janela abre
 	);
 
 	my $file = Settings::getControlFilename('jornada.txt');
@@ -117,6 +124,16 @@ sub loadData {
 			$cidades{$city} = 1;
 		} elsif ($k eq 'cidade') {
 			$cidades{$_} = 1 for @t;
+		} elsif ($k eq 'loja' && @t >= 4) {
+			# loja <cidade> <mapa> <x> <y>: vende o loot e compra pocao (sellAuto/buyAuto) na cidade-base da etapa
+			my ($city, $map, $x, $y) = @t;
+			$lojas{$city} = "$map $x $y";
+		} elsif ($k eq 'horario') {
+			# horario HH:MM-HH:MM ...: janelas em que o "jogador" costuma estar online (hora local da maquina)
+			for my $j (@t) {
+				next unless $j =~ /^(\d{1,2}):(\d{2})-(\d{1,2}):(\d{2})$/;
+				push @horarios, [$1 * 60 + $2, $3 * 60 + $4];
+			}
 		} elsif ($k eq 'opcao' && @t >= 2) {
 			my $key = shift @t; $opt{$key} = join(' ', @t);
 		}
@@ -182,6 +199,11 @@ sub fala {
 	$v{nome}   = $char->{name} unless defined $v{nome};
 	$v{lv}     = $char->{lv}   unless defined $v{lv};
 	$v{cidade} = mapName()     unless defined $v{cidade};
+	$v{classe} = $JOBNOME{ $char->{jobID} } || 'aventureiro' unless defined $v{classe};
+	unless (defined $v{meta}) {             # a classe final da jornada (a ultima linha "classe")
+		my ($ult) = sort { $b->{to} <=> $a->{to} } @classes;
+		$v{meta} = $ult ? $JOBNOME{ $ult->{to} } || 'heroi' : $v{classe};
+	}
 	$txt =~ s/\{(\w+)\}/defined $v{$1} ? $v{$1} : ''/ge;
 	return $txt;
 }
@@ -220,6 +242,16 @@ sub combate {
 		if ($e) {
 			configModify('lockMap', $e->{map}, 1)  if ($config{lockMap} || '') ne $e->{map};
 			configModify('saveMap', $e->{city}, 1) if ($config{saveMap} || '') ne $e->{city};
+			if (my $loja = $lojas{ $e->{city} }) {
+				# loot vendido e pocao comprada na loja de ferramentas da cidade-base (items_control: auto-sell)
+				configModify('sellAuto', 1, 1) unless $config{sellAuto};
+				configModify('sellAuto_npc', $loja, 1) if ($config{sellAuto_npc} || '') ne $loja;
+				for (my $i = 0; exists $config{"buyAuto_$i"}; $i++) {
+					next unless $config{"buyAuto_${i}_mazzaLoja"};
+					configModify("buyAuto_${i}_npc", $loja, 1) if ($config{"buyAuto_${i}_npc"} || '') ne $loja;
+					configModify("buyAuto_${i}_disabled", 0, 1) if $config{"buyAuto_${i}_disabled"};
+				}
+			}
 		}
 	} else {
 		configModify('attackAuto', 1, 1) if ($config{attackAuto} || '') ne '1';   # so revida
@@ -240,6 +272,72 @@ sub andarAte {
 }
 
 sub agendarPausa { $nextBreak = time + 60 * rnd($opt{pausa_a_cada_min}, $opt{pausa_a_cada_max}); }
+
+# ------------------------------------------------ horario de jogo (sessoes) ---
+sub minutoDoDia { my @t = localtime(shift || time); return $t[2] * 60 + $t[1]; }
+
+# minutos ate o fim da janela em que <m> esta (undef = fora de todas)
+sub restaNaJanela {
+	my ($m) = @_;
+	for my $j (@horarios) {
+		my ($a, $b) = @$j;
+		if ($a <= $b) { return $b - $m if $m >= $a && $m < $b; }
+		else          { return ($m >= $a ? 1440 - $m + $b : $b - $m) if $m >= $a || $m < $b; }   # passa da meia-noite
+	}
+	return undef;
+}
+
+# segundos ate a proxima vez que o "jogador" entra
+sub proximaEntrada {
+	my $m = minutoDoDia();
+	my $resta = restaNaJanela($m);
+	# ainda sobra janela: volta mais tarde no mesmo horario (jantou, voltou)
+	return 60 * int(rnd(20, 60)) if defined $resta && $resta > 90 && rand() < 0.4;
+	my $melhor;
+	for my $j (@horarios) {
+		my $d = ($j->[0] - $m) % 1440;
+		$d = 1440 if $d <= 0;
+		$melhor = $d if !defined $melhor || $d < $melhor;
+	}
+	return 60 * ($melhor + int(rand($opt{atraso_entrada_max} + 1)));
+}
+
+# devolve 1 se o tick deve parar aqui (fora do horario / saindo)
+sub controlarSessao {
+	return 0 unless @horarios;
+	if ($mode eq 'saindo') {
+		if (time >= $md{fim}) {
+			my $s = proximaEntrada();
+			message sprintf("[%s] fim da sessao; volta em %.1f h.\n", $NAME, $s / 3600), 'success';
+			undef $sessaoFim; setMode('jornada');
+			Commands::run("relog $s");
+		}
+		return 1;
+	}
+	my $resta = restaNaJanela(minutoDoDia());
+	if (!defined $sessaoFim) {
+		if (!defined $resta) {       # entrou fora do horario (bot recem-ligado): sai calado
+			my $s = proximaEntrada();
+			message sprintf("[%s] fora do horario; entra em %.1f h.\n", $NAME, $s / 3600), 'info';
+			Commands::run("relog $s");
+			return 1;
+		}
+		my $dur = rnd($opt{sessao_min}, $opt{sessao_max});
+		$dur = $resta if $dur > $resta;
+		$sessaoFim = time + 60 * $dur;
+		$lastPublic = 0;
+		dizer('chegada', 70, 1);
+		return 0;
+	}
+	if (time >= $sessaoFim && !AI::is('attack')) {
+		combate(0);
+		Commands::run('stand') if $char->{sitting};
+		dizer('saida', 85, 1);
+		setMode('saindo', fim => time + rnd(4, 12));
+		return 1;
+	}
+	return 0;
+}
 
 sub setMode { my ($m, %d) = @_; $mode = $m; %md = (%d, since => time); message "[$NAME] modo: $m\n", 'info'; }
 
@@ -287,6 +385,7 @@ sub tick {
 	}
 
 	processarRespostas();
+	return if controlarSessao();
 
 	# ---- maquina de estados ----
 	if ($mode eq 'pausa') {
@@ -391,7 +490,7 @@ sub tick {
 			return;
 		}
 		if (!$st{salvo}{$map} && $npcsList) {
-			my ($kafra) = grep { ($_->{name} || '') =~ /kafra/i } $npcsList->getItems;
+			my ($kafra) = grep { ($_->{name} || '') =~ /kafra/i } @{ $npcsList->getItems };
 			if ($kafra) {
 				combate(0);
 				setMode('kafra', npc => { x => $kafra->{pos}{x}, y => $kafra->{pos}{y} });
@@ -482,6 +581,10 @@ sub processarRespostas {
 		if (time < $p->{at}) { push @rest, $p; next; }
 		my $txt = fala($p->{sec}, jogador => $p->{quem});
 		next unless defined $txt;
+		if ($txt =~ s/^\/e\s+(\S+)\s*//) {          # "/e 3 texto": emote em publico (tambem antes de PM)
+			Commands::run("e $1");
+			next unless length $txt;
+		}
 		if ($p->{tipo} eq 'pm') { (my $q = $p->{quem}) =~ s/"/'/g; Commands::run(qq{pm "$q" $txt}); }
 		else { Commands::run("c $txt"); $lastPublic = time; }
 	}
@@ -521,9 +624,11 @@ sub cmdJornada {
 		message "[$NAME] historico de viagem zerado.\n", 'success';
 	} else {
 		my $e = $char ? etapaAtual() : undef;
-		message sprintf("[%s] modo=%s | etapa=%s -> %s | proxima pausa em %d min | visitadas: %s | fechados: %s\n",
+		message sprintf("[%s] modo=%s | etapa=%s -> %s | proxima pausa em %d min | sessao: %s | visitadas: %s | fechados: %s\n",
 			$NAME, $mode, $e ? "$e->{min}-$e->{max}" : '-', $e ? "$e->{map} ($e->{city})" : '-',
-			$nextBreak ? ($nextBreak - time) / 60 : 0, join(', ', sort keys %{ $st{visitado} }) || 'nenhuma',
+			$nextBreak ? ($nextBreak - time) / 60 : 0,
+			!@horarios ? 'sempre' : defined $sessaoFim ? sprintf('acaba em %d min', ($sessaoFim - time) / 60) : 'fora',
+			join(', ', sort keys %{ $st{visitado} }) || 'nenhuma',
 			join(', ', grep { fechado($_) } sort keys %bloqueado) || 'nenhum'), 'info';
 	}
 }

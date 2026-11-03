@@ -1,0 +1,43 @@
+# Ferreiro de batalha (machado): "Battlesmith" da iRO Wiki Classic (STR 90-120, AGI 50-70, VIT 50-70, DEX 50-60).
+# Mammonite no Mercador, Adrenaline Rush e Maximize Power no Ferreiro. Fonte: https://irowiki.org/classic/Blacksmith
+nome: Ferreiro de batalha (machado)
+classes: [0, 5, 10]         # Aprendiz -> Mercador -> Ferreiro
+troca_classe: {5: 10, 10: 50}
+stats: 9 str, 9 vit, 20 str, 15 agi, 20 vit, 40 str, 30 agi, 30 vit, 25 dex, 60 str, 45 agi, 45 vit, 40 dex, 80 str, 60 agi, 60 vit, 90 str, 55 dex
+skills: >-
+  NV_BASIC 9, MC_INCCARRY 3, MC_DISCOUNT 3, MC_OVERCHARGE 3, MC_MAMMONITE 5, MC_INCCARRY 5, MC_PUSHCART 3,
+  MC_VENDING 3, MC_IDENTIFY 1, MC_MAMMONITE 10, MC_OVERCHARGE 10, MC_PUSHCART 10, MC_DISCOUNT 10,
+  BS_HAMMERFALL 2, BS_ADRENALINE 5, BS_HILTBINDING 1, BS_WEAPONRESEARCH 2, BS_WEAPONPERFECT 5, BS_OVERTHRUST 5,
+  BS_MAXIMIZE 5, BS_SKINTEMPER 5, BS_HAMMERFALL 5, BS_REPAIRWEAPON 1, BS_IRON 1, BS_STEEL 1, BS_FINDINGORE 1,
+  BS_WEAPONRESEARCH 10, BS_ENCHANTEDSTONE 1, BS_ORIDEOCON 1, BS_DAGGER 1, BS_SWORD 1
+config: |
+  attackSkillSlot MC_MAMMONITE {
+  	lvl 10
+  	dist 1.5
+  	sp > 30%
+  	zeny > 3000
+  	maxAttempts 2
+  }
+  useSelf_skill BS_ADRENALINE {
+  	lvl 5
+  	sp > 30%
+  	whenStatusInactive EFST_ADRENALINE
+  	onAction attack
+  	inLockOnly 1
+  }
+  useSelf_skill BS_OVERTHRUST {
+  	lvl 5
+  	sp > 40%
+  	whenStatusInactive EFST_OVERTHRUST
+  	onAction attack
+  	inLockOnly 1
+  }
+etapas:
+  - 1 12 0 prt_fild08 prontera
+  - 1 20 5 prt_fild08 prontera
+  - 21 32 5 prt_sewb2 prontera
+  - 33 99 5 orcsdun01 geffen
+  - 1 55 10 orcsdun01 geffen
+  - 56 70 10 xmas_dun02 alberta       # Fabrica de Brinquedos 2: Cruiser, Myst Case (ida por Lutie)
+  - 71 85 10 alde_dun04 aldebaran     # Torre do Relogio B4: Bathory
+  - 86 99 10 alde_dun02 aldebaran

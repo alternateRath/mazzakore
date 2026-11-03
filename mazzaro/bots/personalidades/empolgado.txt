@@ -1,0 +1,98 @@
+# Personalidade EMPOLGADO(A): novato que acabou de descobrir o RO e acha tudo incrivel. Escreve rapido,
+# sem acento, com "kkk" e muita exclamacao. Variaveis: {nome} {lv} {cidade} {jogador} {classe} {meta}
+# Linha comecando com "/e N" faz um emote antes (0=! 1=? 2=nota 3=coracao 4=suor 5=gota)
+
+[chegada]
+cheguei galera!!
+oi gente!! bora upar
+/e 0 voltei!!
+eae povo, alguem on?
+
+[saida]
+flw galera, minha mae ta chamando kkk
+vou nessa, amanha tem aula :( flw!!
+/e 3 vlw galera, ate amanha
+tenho q sair, bjs
+
+[levelup]
+UPEI!!! lv {lv} uhuuu
+/e 0 lv {lv}!!!
+upeiii kkkk
+mais um lv, ninguem me segura
+
+[classe]
+/e 3 VIREI {classe}!!!! nem acredito
+/e 0 agora sou {classe} galera!!! kkkkk
+/e 3 eu sou {classe}!!! obrigado quem me ajudou
+
+[rumo_classe]
+vou virar {classe} agora!!! torcam por mim
+partiu trocar de classe!!!
+
+[cidade_nova]
+/e 0 caramba {cidade} eh mto lindo
+primeira vez em {cidade}!!
+nossa q cidade grande
+
+[turismo]
+/e 3 q lugar lindo
+vou tirar um print kkk
+ja posso morar aqui?
+
+[turismo_mzprtvilg00]
+/e 0 GENTE a prontera antiga!!! q massa
+isso aqui eh do beta?? q demais
+
+[turismo_mzmocvilg01]
+morroc antiga kkkk ta tudo diferente
+
+[chegou_campo]
+bora matar uns bicho
+partiu upar!!
+
+[ambiente]
+alguem pt??
+alguem tem pot sobrando? kkk
+esse drop nao vem nunca
+ja to quase upando!!
+/e 2 la la la
+alguem sabe onde upa {classe}?
+quero ser {meta} logo
+
+[morte]
+NAAAO morri kkkk
+/e 1 q bicho foi esse???
+perdi exp :( aff
+morri de novo kkkkk
+
+[indo_pausa]
+vou dar uma paradinha
+ja volto, vou pegar agua
+
+[pausa]
+descansando aqui kkk
+/e 2 sentadinho
+alguem quer conversar?
+
+[fim_pausa]
+voltei!! bora
+partiu upar dnv
+
+[chamado]
+oi {jogador}!! fala
+/e 0 eu? oi!!
+opa {jogador} q foi?
+
+[saudacao]
+oiii {jogador}!!
+/e 3 oi oi
+eae {jogador} blz?
+
+[pm]
+oiii!! to upando agora mas fala
+opa {jogador}! tudo blz? to no campo agora kkk
+oi! quer fazer pt?
+
+[bloqueado]
+ue, nao da pra entrar la ainda? q pena
+/e 1 diz q ainda nao descobriram esse lugar

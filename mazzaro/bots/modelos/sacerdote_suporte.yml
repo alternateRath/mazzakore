@@ -1,0 +1,52 @@
+# Sacerdote de suporte (INT/VIT): "Full Support" da iRO Wiki Classic (INT 99, VIT 80-95, DEX 1-50).
+# Sozinho ele so upa contra morto-vivo com Heal, que era exatamente o que se fazia na Caverna de Payon.
+# Fonte: https://irowiki.org/classic/Priest e /classic/Leveling_Spots
+nome: Sacerdote de suporte (Heal em morto-vivo)
+classes: [0, 4, 8]
+troca_classe: {4: 10, 8: 50}
+stats: 9 int, 9 vit, 20 int, 20 vit, 15 dex, 40 int, 40 vit, 25 dex, 60 int, 60 vit, 80 int, 80 vit, 99 int, 90 vit, 35 dex
+skills: >-
+  NV_BASIC 9, AL_HEAL 10, AL_INCAGI 3, AL_DP 5, AL_BLESSING 5, AL_RUWACH 1, AL_TELEPORT 2, AL_WARP 4,
+  AL_PNEUMA 1, AL_INCAGI 10, AL_BLESSING 10, AL_CURE 1, AL_ANGELUS 3, AL_DECAGI 1, AL_HOLYWATER 1,
+  PR_LEXDIVINA 3, PR_STRECOVERY 1, MG_SRECOVERY 4, ALL_RESURRECTION 1, PR_TURNUNDEAD 8, PR_KYRIE 10,
+  PR_MAGNIFICAT 5, PR_GLORIA 5, PR_IMPOSITIO 5, PR_SANCTUARY 7
+config: |
+  attackSkillSlot AL_HEAL {
+  	lvl 10
+  	dist 9
+  	sp > 15%
+  	monsters 1015, 1076, 1028, 1016, 1036, 1041, 1026, 1188, 1153, 1152, 1197, 1098, 1117, 1032, 1192, 1132
+  }
+  attackSkillSlot PR_TURNUNDEAD {
+  	lvl 8
+  	dist 9
+  	sp > 50%
+  	monsters 1015, 1076, 1028, 1016, 1036, 1041, 1026, 1188, 1153, 1152, 1197, 1098, 1117, 1032, 1192, 1132
+  	maxAttempts 1
+  }
+  useSelf_skill AL_HEAL {
+  	lvl 10
+  	hp < 60%
+  	sp > 10%
+  }
+  useSelf_skill PR_KYRIE {
+  	lvl 10
+  	sp > 30%
+  	whenStatusInactive EFST_KYRIE
+  	aggressives > 0
+  }
+  useSelf_skill AL_BLESSING {
+  	lvl 10
+  	sp > 50%
+  	whenStatusInactive EFST_BLESSING
+  	inLockOnly 1
+  	notWhileSitting 1
+  }
+# Heal/Turn Undead so nos mortos-vivos do bro-01 (attackSkillSlot monsters <ids>); o resto apanha na maca
+etapas:
+  - 1 12 0 prt_fild08 prontera
+  - 1 30 4 pay_dun00 payon
+  - 31 99 4 pay_dun01 payon
+  - 1 55 8 orcsdun01 geffen
+  - 56 70 8 gl_chyard geffen
+  - 71 99 8 in_sphinx4 morocc

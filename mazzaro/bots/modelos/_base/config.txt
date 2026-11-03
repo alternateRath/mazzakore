@@ -1,0 +1,100 @@
+######## Base dos bots gerados (mazzaro/bots/modelos/_base) ########
+# O bots.py --novo junta: esta base + o bloco "config" do modelo + o bot.yml.
+# lockMap/saveMap/attackAuto/route_randomWalk/sellAuto_npc mudam em tempo de execucao pelo plugin mazzaJornada.
+
+######## Morte, GM, reconexao ########
+dcOnDeath 0
+dcOnDualLogin 0
+autoRestart 0
+avoidGM_near 0
+avoidGM_talk 0
+avoidList 0
+
+######## Mapa / movimento ########
+lockMap prt_fild08
+saveMap prontera
+saveMap_warpToBuyOrSell 0
+route_randomWalk 1
+route_randomWalk_inTown 0
+route_randomWalk_maxRouteTime 75
+route_maxWarpFee 2000
+route_maxNpcTries 5
+route_teleport 0
+route_step 12
+runFromTarget 0
+
+######## Combate ########
+attackAuto 2
+attackAuto_party 1
+attackAuto_onlyWhenSafe 0
+attackAuto_followTarget 1
+attackAuto_inLockOnly 1
+attackMaxRouteDistance 40
+attackMaxRouteTime 6
+attackCheckLOS 1
+attackChangeTarget 1
+attackRouteMaxPathDistance 28
+attackUseWeapon 1
+attackNoGiveup 0
+attackLooters 0
+
+######## Loot ########
+itemsTakeAuto 1
+itemsTakeAuto_party 0
+itemsGatherAuto 1
+itemsMaxWeight 85
+itemsMaxWeight_sellOrStore 60
+itemsMaxNum_sellOrStore 99
+
+######## Descanso (parece jogador: senta pra recuperar) ########
+sitAuto_hp_lower 35
+sitAuto_hp_upper 85
+sitAuto_sp_lower 10
+sitAuto_sp_upper 60
+sitAuto_over_50 0
+sitAuto_idle 0
+
+statsAddAuto 1
+statsAddAuto_dontUseBonus 1
+skillsAddAuto 1
+
+######## Itens de cura (IDs: as tabelas do mazzakore dao nomes em pt-BR) ########
+useSelf_item 501, 502, 503, 512, 513, 515, 517, 514, 578 {
+	hp < 40%
+	notWhileSitting 1
+	inLockOnly 0
+	timeout 2
+}
+
+######## Loja da cidade-base (o plugin poe o npc pela linha "loja" do jornada.txt) ########
+# mazzaLoja 1 = o plugin troca o npc e liga o bloco quando a etapa muda de cidade
+sellAuto 0
+sellAuto_npc
+sellAuto_distance 3
+buyAuto 501 {
+	npc
+	standpoint
+	distance 3
+	minAmount 5
+	maxAmount 30
+	zeny > 2000
+	disabled 1
+	mazzaLoja 1
+}
+
+######## Teleporte (desligado: ninguem de nivel baixo teleporta, fica mais realista) ########
+teleportAuto_hp 0
+teleportAuto_idle 0
+teleportAuto_portal 0
+teleportAuto_search 0
+teleportAuto_minAggressives 0
+teleportAuto_useSkill 0
+
+######## Social ########
+autoResponse 0
+autoEmote 0
+partyAuto 1
+partyAutoShare 0
+guildAutoDeny 1
+dealAuto 1
+ignoreAll 0
