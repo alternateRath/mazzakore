@@ -22,7 +22,7 @@
 #
 #  config.txt do bot (todos opcionais; o gerador sorteia por bot):
 #   mazzaRota 1                     0 desliga (o core volta ao randomWalk)
-#   mazzaRota_grade 0 0             sub-areas em x e y (0 = pelo tamanho: 1 a cada ~60 celulas, 2-4)
+#   mazzaRota_grade 0 0             sub-areas em x e y (0 = pelo tamanho: 1 a cada ~70 celulas, 2-6)
 #   mazzaRota_permanencia 10 30     minutos numa sub-area
 #   mazzaRota_salto 8 30            distancia (celulas) do proximo destino dentro da sub-area
 #   mazzaRota_candidatos 8          destinos sorteados por escolha
@@ -47,7 +47,7 @@ use Time::HiRes qw(time);
 use Digest::MD5 qw(md5);
 
 use Plugins;
-use Globals qw($char %config %timeout $field $net $npcsList $playersList);
+use Globals qw($char %config %timeout $field $net $npcsList $playersList %portals_lut);
 use Log qw(message warning debug);
 use AI qw(ai_route);
 use Commands;
@@ -61,6 +61,7 @@ my $hooks = Plugins::addHooks(
 	['ai_processRandomWalk', \&onRandomWalk],
 	['AI_pre',               \&onAI],
 	['mazzaRitmo_chegada',   \&onChegada],
+	['getRoute',             \&onGetRoute],
 	['start3',               \&novaSessao],
 );
 my $cmds = Commands::register(['rota', 'Rotas do mazzaRota (status|grade|memoria|trocar|passeio)', \&cmdRota]);
@@ -198,7 +199,7 @@ sub montarGrade {
 		}
 	}
 	my ($gx, $gy) = nums('grade', 0, 0);
-	my $auto = sub { my $n = int($_[0] / 60 + 0.5); return $n < 2 ? 2 : $n > 4 ? 4 : $n; };
+	my $auto = sub { my $n = int($_[0] / 70 + 0.5); return $n < 2 ? 2 : $n > 6 ? 6 : $n; };   # ~70 celulas
 	$gx = $auto->($x1 - $x0 + 1) unless $gx > 0;
 	$gy = $auto->($y1 - $y0 + 1) unless $gy > 0;
 	%G = (mapa => $m, w => $w, h => $h, bits => $melhor, n => $melhorN, nx => $gx, ny => $gy,
@@ -390,6 +391,50 @@ sub onRandomWalk {
 		attackOnRoute => (!defined $aa || $aa < 0) ? 0 : ($aa >= 2 ? 2 : 1),
 		noMapRoute => ($config{route_randomWalk} == 2 ? 1 : 0),
 		isRandomWalk => 1);
+}
+
+# -------------------------------------------------- portal no caminho ---
+# O A* do core anda por cima de portal que nao e o destino da rota. No Prontera de 2026 a rota da fonte ate a
+# saida leste passa na porta da Estalagem (204,192): o bot entra, sai em (204,188), recalcula e entra de novo,
+# a cada 3 s (visto com a LiaSacer, 2026-11-03). Toda rota ganha peso alto em volta dos portais conhecidos
+# (portals.txt) do mapa, menos o que fica no destino.
+my %portaisDe;   # mapa -> [[x, y], ...]
+sub onGetRoute {
+	my (undef, $args) = @_;
+	return unless ligado();
+	my ($s, $d, $f) = @{$args}{qw(start dest field)};
+	return unless $s && $d && $f;
+	my $m = $f->baseName;
+	unless ($portaisDe{$m}) {
+		$portaisDe{$m} = [];
+		for my $k (keys %portals_lut) {
+			my ($pm, $px, $py) = split / /, $k;
+			push @{ $portaisDe{$m} }, [$px, $py] if defined $py && $pm eq $m;
+		}
+	}
+	return unless @{ $portaisDe{$m} };
+	my %cel;
+	if ($args->{customWeights} && ref $args->{secondWeightMap} eq 'ARRAY') {
+		$cel{"$_->{x},$_->{y}"} = $_->{weight} foreach @{ $args->{secondWeightMap} };
+	}
+	my ($w, $h) = ($f->width, $f->height);
+	my $n = 0;
+	for my $p (@{ $portaisDe{$m} }) {
+		my ($px, $py) = @$p;
+		next if abs($px - $d->{x}) <= 3 && abs($py - $d->{y}) <= 3;   # e o portal que a rota quer usar
+		next if abs($px - $s->{x}) <= 1 && abs($py - $s->{y}) <= 1;   # comecando em cima dele
+		for my $x ($px - 2 .. $px + 2) {   # warp do rAthena costuma pegar 1-2 celulas em volta
+			next if $x < 0 || $x >= $w;
+			for my $y ($py - 2 .. $py + 2) {
+				next if $y < 0 || $y >= $h;
+				$cel{"$x,$y"} = 5000;
+				$n++;
+			}
+		}
+	}
+	return unless $n;
+	$args->{customWeights} = 1;
+	$args->{secondWeightMap} = [map { my ($x, $y) = split /,/; +{x => $x, y => $y, weight => $cel{$_}} } keys %cel];
 }
 
 # ------------------------------------------------------ passeio na cidade ---

@@ -9,7 +9,7 @@ mas espalha o bot pelo mapa inteiro em poucos minutos. Gente faz outra coisa: fi
 para onde tinha monstro e só depois de um tempo muda de lugar. O mazzaRota troca o `randomWalk` no `lockMap`
 (hook `ai_processRandomWalk`, a mesma porta do lockMapSweep, que ele substitui) por:
 
-- **Sub-áreas**: o mapa vira uma grade (2-4 por eixo, pelo tamanho). O bot fica 10-30 min numa e passa para uma
+- **Sub-áreas**: o mapa vira uma grade (2-6 por eixo, uma a cada ~70 células). O bot fica 10-30 min numa e passa para uma
   vizinha; às vezes vai para uma longe. Cada bot tem uma preferência fixa por sub-área ("o canto dele"), sorteada
   da semente (conta) e do mapa, então dois bots no mesmo mapa ocupam lugares diferentes.
 - **Memória de trechos** da última hora, na mesma grade de 5x5 células da régua. O próximo destino sai de 8
@@ -23,6 +23,14 @@ para onde tinha monstro e só depois de um tempo muda de lugar. O mazzaRota troc
 - **Passeio na cidade**: na pausa, o mazzaJornada chama `mazzaRota::passeio($id)` antes de sentar. O bot visita
   1-3 lugares (Kafra, lojas, perto de quem está parado, o ponto da cidade do `jornada.txt`) e fica 10-60 s em
   cada um.
+
+- **Descanso em pé**: o aprendiz sem Habilidades Básicas 3 não senta. Com HP abaixo do `sitAuto_hp_lower`, ele
+  fica parado até passar do `sitAuto_hp_upper`, sem começar briga nova (revidar continua). Antes andava e atacava
+  com 2% de HP e morria a cada minuto.
+- **Não pisar em portal à toa**: o A* do core anda por cima de portal que não é o destino. No Prontera de 2026 a
+  rota até a saída leste passa na porta da Estalagem, e o bot entrava e saía a cada 3 s. Toda rota (hook
+  `getRoute`) ganha peso 5000 num raio de 2 células em volta dos portais do `portals.txt` no mapa, menos o do
+  destino.
 
 Os mapas alternativos dos modelos (`mazzaro/bots/modelos/*.yml`) são vizinhos da cidade-base com nível médio de
 monstro parecido (spawns do rAthena pre-re + `mob_db`, mapas abertos no bro-01).
