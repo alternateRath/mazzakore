@@ -1,0 +1,11 @@
+# Aldren - bot roleplay #1: o garoto de uma fazenda perto de Prontera que quer entrar para a
+# Ordem dos Cavaleiros e, no caminho, conhecer Rune-Midgard (e a Midgard de 2001).
+descricao: Aldren, aspirante a Cavaleiro (Aprendiz -> Espadachim -> Cavaleiro)
+perfil: kro-2026           # mazzaro/server/profiles/<perfil>.yml (bloco openkore:)
+conta: mzb_aldren          # login no banco local (bots.py --criar-conta aldren); senha em run/bots/aldren/conta.yml
+personagem:                # o plugin cria se o slot estiver vazio
+  nome: Aldren
+  slot: 0
+  sexo: M
+  cabelo: 5
+  cor_cabelo: 2

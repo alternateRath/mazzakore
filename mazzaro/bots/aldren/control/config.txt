@@ -1,0 +1,164 @@
+######## Aldren (Aprendiz -> Espadachim -> Cavaleiro) - so o que muda sobre o padrao ########
+# O mazzaro/bots/bots.py gera o config final em run\bots\aldren\control\config.txt:
+#   !include <mazzakore>/control/config.txt   (padrao do clone)
+#   !include este arquivo
+#   master/server/username/password/char e mazzaJornada_* (do bot.yml)
+# lockMap/saveMap/attackAuto/route_randomWalk mudam em tempo de execucao pelo plugin mazzaJornada
+# (control/jornada.txt); os valores daqui sao so o ponto de partida.
+
+######## Morte, GM, reconexao ########
+dcOnDeath 0
+dcOnDualLogin 0
+autoRestart 0
+avoidGM_near 0
+avoidGM_talk 0
+avoidList 0
+
+######## Mapa / movimento ########
+lockMap prt_fild08
+lockMap_x
+lockMap_y
+lockMap_randX
+lockMap_randY
+saveMap prontera
+saveMap_warpToBuyOrSell 0
+route_randomWalk 1
+route_randomWalk_inTown 0
+route_randomWalk_maxRouteTime 75
+route_maxWarpFee 2000
+route_maxNpcTries 5
+route_teleport 0
+route_step 12
+runFromTarget 0
+moveStepDelay
+
+######## Combate ########
+attackAuto 2
+attackAuto_party 1
+attackAuto_onlyWhenSafe 0
+attackAuto_followTarget 1
+attackAuto_inLockOnly 1
+attackDistance 1
+attackDistanceAuto 0
+attackMaxDistance 2
+attackMaxRouteDistance 40
+attackMaxRouteTime 6
+attackCheckLOS 1
+attackCanSnipe 0
+attackChangeTarget 1
+attackRouteMaxPathDistance 28
+attackUseWeapon 1
+attackNoGiveup 0
+attackLooters 0
+
+######## Loot ########
+itemsTakeAuto 1
+itemsTakeAuto_party 0
+itemsGatherAuto 1
+itemsMaxWeight 85
+itemsMaxWeight_sellOrStore 50
+itemsMaxNum_sellOrStore 99
+cartMaxWeight 7900
+
+######## Descanso (parece player: senta pra recuperar HP) ########
+sitAuto_hp_lower 35
+sitAuto_hp_upper 85
+sitAuto_sp_lower 10
+sitAuto_sp_upper 60
+sitAuto_over_50 0
+sitAuto_idle 0
+sitAuto_look
+
+######## Status / skills ########
+# Build "AGI Knight" classica pre-renewal (STR/AGI com um pouco de VIT)
+statsAddAuto 1
+statsAddAuto_dontUseBonus 1
+statsAddAuto_list 9 str, 9 agi, 20 agi, 20 str, 10 vit, 40 agi, 40 str, 20 vit, 60 agi, 60 str, 30 vit, 80 agi, 80 str, 99 agi, 99 str
+skillsAddAuto 1
+# Handles (independem da tabela de nomes). O plugin mazzaJornada reativa a lista
+# depois de cada mudanca de classe.
+skillsAddAuto_list NV_BASIC 9, SM_BASH 5, SM_SWORD 1, SM_TWOHAND 5, SM_RECOVERY 5, SM_TWOHAND 10, SM_BASH 10, SM_MAGNUM 3, SM_PROVOKE 5, SM_ENDURE 1, SM_RECOVERY 10, SM_MAGNUM 10, SM_ENDURE 3, KN_TWOHANDQUICKEN 5, KN_RIDING 1, KN_CAVALIERMASTERY 1, KN_BOWLINGBASH 5, KN_TWOHANDQUICKEN 10, KN_CAVALIERMASTERY 5, KN_BOWLINGBASH 10, KN_AUTOCOUNTER 5, KN_SPEARMASTERY 10, KN_PIERCE 10, KN_SPEARSTAB 10, KN_BRANDISHSPEAR 10
+
+######## Skills de ataque ########
+attackSkillSlot SM_BASH {
+	lvl 5
+	dist 1.5
+	sp > 30%
+	maxAttempts 3
+}
+
+attackSkillSlot SM_MAGNUM {
+	lvl 5
+	dist 1.5
+	sp > 40%
+	aggressives > 2
+}
+
+attackSkillSlot KN_BOWLINGBASH {
+	lvl 10
+	dist 1.5
+	sp > 35%
+	aggressives > 1
+}
+
+useSelf_skill SM_ENDURE {
+	lvl 1
+	sp > 30%
+	whenStatusInactive EFST_ENDURE
+	aggressives > 1
+	onAction attack
+	inLockOnly 1
+}
+
+# Liga quando ele tiver uma espada de duas maos equipada
+useSelf_skill KN_TWOHANDQUICKEN {
+	lvl 10
+	sp > 25%
+	whenStatusInactive EFST_TWOHANDQUICKEN
+	onAction attack
+	inLockOnly 1
+	disabled 1
+}
+
+######## Itens de cura ########
+# IDs: 501 Pocao Vermelha, 502 Laranja, 503 Amarela, 512 Maca, 513 Banana, 515 Cenoura, 517 Carne, 514 Uvas, 578 Morango
+# (as tabelas do mazzakore dao os nomes em pt-BR; ID funciona em qualquer idioma)
+useSelf_item 501, 502, 503, 512, 513, 515, 517, 514, 578 {
+	hp < 40%
+	notWhileSitting 1
+	inLockOnly 0
+	timeout 2
+}
+
+######## Compra / venda (desligado ate escolher a loja de ferramentas) ########
+# nome como aparece na loja (pt-BR no mazzakore)
+buyAuto Poção Vermelha {
+	npc
+	standpoint
+	distance 5
+	minAmount 5
+	maxAmount 40
+	disabled 1
+}
+sellAuto 0
+sellAuto_npc
+storageAuto 0
+storageAuto_npc
+
+######## Teleporte (desligado - espadachim nao teleporta, fica mais realista) ########
+teleportAuto_hp 0
+teleportAuto_idle 0
+teleportAuto_portal 0
+teleportAuto_search 0
+teleportAuto_minAggressives 0
+teleportAuto_useSkill 0
+teleportAuto_useChatCommand
+
+######## Social ########
+autoResponse 0
+autoEmote 0
+partyAuto 1
+partyAutoShare 0
+guildAutoDeny 1
+dealAuto 1
+ignoreAll 0

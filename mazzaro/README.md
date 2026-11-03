@@ -21,6 +21,7 @@ do mundo, e sai.
 | `mazzaro/config.txt`, `mazzaro/roteiros/` | config base do bot e os roteiros |
 | `plugins/mzctl` | controle de fora: comandos do console e estado do bot por TCP local (127.0.0.1:6950, JSON por linha), lido por `tools/mz/kore_cmd.py` do mazzaro (abaixo, "mzctl") |
 | XKore 2 no 2026 | `src/Base/Ragnarok/*`, `src/Network/XKore2/MapServer.pm`, ids do 2026 no Receive | o bot joga e o cliente kRO 2026 se conecta nele para mostrar (abaixo, "XKore 2") |
+| `plugins/mazzaJornada`, `mazzaro/bots/` | **bots roleplay** do MazzaRO: jogadores com história (treino por etapas, mudança de classe, turismo, pausas, conversa), um por pasta, subidos por `mazzaro/bots/bots.py` ([mazzaro/bots/README.md](bots/README.md)) |
 
 ## Como usar (do mazzaro)
 ```

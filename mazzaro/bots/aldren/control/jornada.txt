@@ -1,0 +1,66 @@
+# =============================================================================
+#  Jornada do ALDREN - "o garoto que queria ser cavaleiro"
+#  Lido pelo plugin mazzaJornada. MazzaRO: mazzathena pre-renewal, episodio inicial bro-01.
+#  Todos os mapas abaixo abrem no bro-01 (episodes/data/maps.yml do mazzaro). Se o Motor de
+#  Episodios recusar algum, o plugin pula a etapa por algumas horas e usa a anterior.
+#
+#  IDs de classe: 0 = Aprendiz | 1 = Espadachim | 7 = Cavaleiro
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# etapa <lvMin> <lvMax> <classes> <lockMap> <cidadeBase>
+#  A primeira linha que bate com nivel base + classe atual vale.
+#  Monstros conferidos em npc/pre-re/mobs do mazzathena.
+# -----------------------------------------------------------------------------
+etapa  1  12  0    prt_fild08  prontera   # Sul de Prontera: Poring, Lunatic, Pupa, Drops
+etapa  1  17  1    prt_fild08  prontera   # primeiros dias de Espadachim
+etapa 18  26  1    pay_dun00   payon      # Caverna de Payon 1: Zombie, Skeleton, Familiar, Poporing
+etapa 27  35  1    iz_dun00    izlude     # Ilha de Byalan 1: Plankton, Marina, Hydra, Vadon, Kukre
+etapa 36  45  1    anthell01   morocc     # Formigueiro Infernal 1: Andre, Piere, Deniro, Vitata
+etapa 46  99  1    orcsdun01   geffen     # Masmorra dos Orcs 1: Orc Zombie, Orc Skeleton (se ainda nao virou cavaleiro)
+etapa  1  58  7    orcsdun01   geffen     # primeiras missoes como Cavaleiro
+etapa 59  79  7    c_tower1    aldebaran  # Torre do Relogio 1: Punk, Rideword
+etapa 80  99  7    gl_knt01    geffen     # Glast Heim, salao dos cavaleiros: Raydric, Khalitzburg, Abysmal Knight
+
+# -----------------------------------------------------------------------------
+# classe <deID> <paraID> <jobLvMin> <mapa> <x> <y> <sequencia talknpc>
+#  NPCs do npc/custom/mazzaro/mazzabots.txt (overlay do mazzaro, so para o grupo Bot). Se o NPC
+#  nao estiver no servidor, o bot vai ate la, nao acha o NPC, avisa e
+#  volta a treinar (tenta de novo em 30 min).
+#  Ficam ao lado dos oficiais: Swordman#swd_1 izlude_in 74,172 e Chivalry Captain#knt prt_in 88,101.
+# -----------------------------------------------------------------------------
+classe 0 1 10  izlude_in 72 170  c r0 c     # Guilda dos Espadachins (Izlude)
+classe 1 7 50  prt_in    85  99  c r0 c     # Ordem dos Cavaleiros (Prontera) - job 50 p/ ter todos os pontos
+
+# -----------------------------------------------------------------------------
+# ponto <cidade> <mapa> <x> <y> [volta <x> <y> <sequencia>]
+#  Turismo na 1a vez que passa pela <cidade>. Com "volta", depois da visita fala com o NPC
+#  em <x>,<y> do <mapa> para voltar (o "Eco do presente" das zonas de 2001).
+#  As zonas de 2001 se alcancam pelo Historiador (prontera 147,189) - o portal com conversa
+#  ja esta no tables/mazzaro/portals.txt. Coordenadas das cidades atuais sao aproximadas.
+#  Fala: secao [turismo_<mapa>], depois [turismo_<cidade>], depois [turismo].
+# -----------------------------------------------------------------------------
+ponto prontera  prontera     156 185                     # fonte central
+ponto prontera  mzprtvilg00  100 102  volta 100 104 r0   # Prontera de 2001 (castelo), pelo Historiador
+ponto prontera  mzmocvilg01  100 100  volta 100 102 r0   # Vila de Morroc de 2001
+ponto izlude    izlude       128 110                     # centro de Izlude
+ponto payon     payon        160 225                     # vila de Payon
+ponto morocc    morocc       160  96                     # oasis de Morroc
+ponto geffen    geffen       119 105                     # base da Torre de Geffen
+ponto aldebaran aldebaran    140 115                     # torre do relogio vista de fora
+
+# Mapas que tambem contam como cidade (pausas, Kafra)
+cidade prontera izlude payon morocc geffen aldebaran alberta
+
+# -----------------------------------------------------------------------------
+# opcao <chave> <valor>
+# -----------------------------------------------------------------------------
+opcao chance_fala_ambiente 4      # % por minuto de falar algo em campo
+opcao intervalo_fala       180    # segundos minimos entre falas publicas
+opcao pausa_a_cada_min     45     # minutos
+opcao pausa_a_cada_max     95
+opcao pausa_duracao_min    4
+opcao pausa_duracao_max    14
+opcao kafra_seq            c r0 c # F_Kafra do mazzathena: mes/next, 1a opcao = Save
+opcao ataque_normal        2
+opcao bloqueio_horas       6      # mapa recusado pelo Motor de Episodios: tenta de novo depois disso

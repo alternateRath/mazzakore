@@ -1,0 +1,107 @@
+# Falas do ALDREN - jovem de uma fazenda nos arredores de Prontera.
+# Curioso, educado, meio ingenuo, sonha em servir a Ordem dos Cavaleiros.
+# Variaveis: {nome} {lv} {cidade} {jogador}
+# Linha comecando com "/e N" faz um emote antes (0=! 1=? 2=nota 3=coracao)
+
+[levelup]
+Mais um passo rumo a Ordem dos Cavaleiros!
+nivel {lv}... meu pai nao ia acreditar
+/e 0 opa, subi!
+ufa, to ficando mais forte
+cada vez mais perto do meu sonho
+
+[classe]
+/e 3 consegui!! um passo mais perto de virar cavaleiro
+/e 3 nem acredito... obrigado a todos que me ajudaram ate aqui
+
+[rumo_classe]
+acho que ja estou pronto... vou falar com a guilda
+hora de provar meu valor!
+
+[cidade_nova]
+/e 0 entao essa e {cidade}... sempre quis conhecer
+uau, {cidade} e bem diferente de casa
+finalmente cheguei em {cidade}!
+
+[turismo]
+que lugar bonito
+vou guardar essa vista na memoria
+
+[turismo_prontera]
+a capital... um dia vou proteger essas muralhas
+dizem que os cavaleiros juram lealdade ali no castelo
+
+[turismo_izlude]
+o cheiro do mar... a guilda dos espadachins fica por aqui
+
+[turismo_payon]
+que vila tranquila, cheia de arvores
+me falaram que a caverna aqui perto e assombrada
+
+[turismo_morocc]
+que calor!! como o pessoal vive nesse deserto?
+o oasis de Morroc... valeu a viagem
+
+[turismo_geffen]
+a torre dos magos... da ate um frio na barriga
+
+[turismo_aldebaran]
+o relogio gigante! dizem que la dentro o tempo e estranho
+
+[turismo_mzprtvilg00]
+/e 0 entao era assim a Prontera de antigamente...
+o Historiador tinha razao, parece um sonho
+que estranho, o castelo era diferente
+
+[turismo_mzmocvilg01]
+a Morroc antiga! nem parece a mesma cidade
+o deserto ja era quente desse jeito, pelo visto
+
+[bloqueado]
+hm, dizem que essa regiao ainda e desconhecida... vou treinar em outro lugar
+/e 1 ninguem conhece o caminho pra la ainda
+
+[chegou_campo]
+bora treinar
+vamos la, mais um dia de treino
+
+[ambiente]
+alguem sabe onde vende uma espada boa?
+esses bichos nao acabam nunca
+/e 2 la la la
+um dia ainda monto num PecoPeco
+saudade de casa as vezes
+alguem ai tambem quer ser cavaleiro?
+
+[morte]
+ai... essa doeu
+/e 1 o que me acertou??
+preciso treinar mais...
+
+[indo_pausa]
+vou dar uma descansada na cidade
+cansei, vou sentar um pouco
+
+[pausa]
+descansando um pouco
+alguem sabe uma boa historia?
+/e 2 hora do lanche
+
+[fim_pausa]
+bom, de volta ao treino
+descansei, bora!
+
+[chamado]
+oi {jogador}! em que posso ajudar?
+/e 0 opa, me chamou?
+sim? to aqui treinando
+
+[saudacao]
+oi {jogador}!
+e ai, tudo bem?
+/e 3 ola!
+
+[pm]
+oi! to meio ocupado treinando agora, falo contigo depois
+opa, tudo certo? to upando aqui, ja ja respondo direito
+oi {jogador}! to tentando virar cavaleiro, me deseja sorte
