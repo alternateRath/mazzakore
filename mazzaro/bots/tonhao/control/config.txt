@@ -124,3 +124,16 @@ useSelf_skill BS_OVERTHRUST {
 	onAction attack
 	inLockOnly 1
 }
+
+######## Ritmo e agenda (plugins/mazzaRitmo; sorteado pelo gerador) ########
+mazzaRitmo 1
+mazzaRitmo_perfil estudante
+mazzaRitmo_deslocamento -43
+mazzaRitmo_horas_semana 19.6
+mazzaRitmo_dias 3
+mazzaRitmo_reacao 0.30 0.55 0.08
+mazzaRitmo_ping 56
+mazzaRitmo_afk 15 32 1 5
+mazzaRitmo_pausa 50 74 5 15
+mazzaRitmo_meio_luta 0.17
+mazzaRitmo_limiar 25 50

@@ -11,6 +11,8 @@
 #     2001 pelo Historiador, voltando pelo "Eco do presente")
 #   - salva na Kafra de cada cidade nova
 #   - faz pausas (volta pra cidade, senta, conversa, retoma)
+#   - horario e sessoes ficam com o mazzaRitmo: este plugin so fala na chegada e
+#     na saida e leva o bot pra pausa quando ele pede (hooks mazzaRitmo_*)
 #   - fala em level up, classe, morte, cidade nova; responde PM e quem o chama
 #   - respeita o Motor de Episodios: mapa fechado vira etapa pulada por um tempo
 #   - cria o personagem se a conta estiver vazia (mazzaJornada_personagem ...)
@@ -47,6 +49,9 @@ my $hooks = Plugins::addHooks(
 	['charSelectScreen', \&onCharSelect],
 	['packet_privMsg',   \&onPM],
 	['packet_pubMsg',    \&onPub],
+	['mazzaRitmo_chegada', \&onRitmoChegada],
+	['mazzaRitmo_saida',   \&onRitmoSaida],
+	['mazzaRitmo_pausa',   \&onRitmoPausa],
 );
 my $logHook = Log::addHook(\&onLog);
 my $cmds = Commands::register(['jornada', 'Jornada roleplay (status|pausa|retomar|reset)', \&cmdJornada]);
@@ -58,24 +63,23 @@ sub unload {
 }
 
 # ---------------------------------------------------------------- dados ----
-my (@etapas, @classes, %pontos, %falas, %opt, %cidades, %lojas, @horarios);
+my (@etapas, @classes, %pontos, %falas, %opt, %cidades, %lojas);
 my $loaded = 0;
 
 # ---------------------------------------------------------------- estado ---
 my %st = (visitado => {}, salvo => {}, turismo => {});   # persistido em logs/jornada_<nome>.txt
 my %bloqueado;             # mapa => instante em que o Motor de Episodios recusou
 my $bloqueioNovo;          # mapa recusado ainda nao tratado pelo tick
-my $mode = 'jornada';      # jornada | classe | turismo | kafra | retorno | pausa
+my $mode = 'jornada';      # jornada | classe | turismo | kafra | retorno | pausa | saindo
 my %md;                    # dados do modo atual
 my ($lastTick, $lastLv, $lastJobLv, $lastJob, $lastMap, $wasDead) = (0);
 my ($lastPublic, $nextBreak, $lastMoveCmd) = (0, 0, 0);
 my (@pending, %lastReplyTo);
 my ($criouEm, $criacoes) = (0, 0);
-my $sessaoFim;             # fim da sessao de jogo atual (horario); undef = ainda nao comecou
 
 # =============================================================== leitura ===
 sub loadData {
-	@etapas = (); @classes = (); %pontos = (); %falas = (); %cidades = (); %lojas = (); @horarios = ();
+	@etapas = (); @classes = (); %pontos = (); %falas = (); %cidades = (); %lojas = ();
 	%opt = (
 		chance_fala_ambiente => 4,      # % por minuto em campo
 		intervalo_fala       => 180,    # segundos minimos entre falas publicas
@@ -88,9 +92,6 @@ sub loadData {
 		resposta_delay_min   => 6,
 		resposta_delay_max   => 22,
 		bloqueio_horas       => 6,      # depois disso tenta de novo o mapa fechado
-		sessao_min           => 50,     # minutos de jogo por sessao dentro da janela de horario
-		sessao_max           => 150,
-		atraso_entrada_max   => 40,     # minutos de atraso aleatorio para entrar depois que a janela abre
 	);
 
 	my $file = Settings::getControlFilename('jornada.txt');
@@ -129,11 +130,7 @@ sub loadData {
 			my ($city, $map, $x, $y) = @t;
 			$lojas{$city} = "$map $x $y";
 		} elsif ($k eq 'horario') {
-			# horario HH:MM-HH:MM ...: janelas em que o "jogador" costuma estar online (hora local da maquina)
-			for my $j (@t) {
-				next unless $j =~ /^(\d{1,2}):(\d{2})-(\d{1,2}):(\d{2})$/;
-				push @horarios, [$1 * 60 + $2, $3 * 60 + $4];
-			}
+			warning "[$NAME] 'horario' no jornada.txt foi aposentado: a agenda e do mazzaRitmo (mazzaRitmo_* no config.txt).\n";
 		} elsif ($k eq 'opcao' && @t >= 2) {
 			my $key = shift @t; $opt{$key} = join(' ', @t);
 		}
@@ -273,70 +270,35 @@ sub andarAte {
 
 sub agendarPausa { $nextBreak = time + 60 * rnd($opt{pausa_a_cada_min}, $opt{pausa_a_cada_max}); }
 
-# ------------------------------------------------ horario de jogo (sessoes) ---
-sub minutoDoDia { my @t = localtime(shift || time); return $t[2] * 60 + $t[1]; }
+# --------------------------------------------- sessoes (quem decide e o mazzaRitmo) ---
+sub ritmo   { return defined &mazzaRitmo::agenda && mazzaRitmo::agenda(); }
+sub emPausa { return $mode eq 'retorno' || $mode eq 'pausa' ? 1 : 0; }   # o mazzaRitmo le
 
-# minutos ate o fim da janela em que <m> esta (undef = fora de todas)
-sub restaNaJanela {
-	my ($m) = @_;
-	for my $j (@horarios) {
-		my ($a, $b) = @$j;
-		if ($a <= $b) { return $b - $m if $m >= $a && $m < $b; }
-		else          { return ($m >= $a ? 1440 - $m + $b : $b - $m) if $m >= $a || $m < $b; }   # passa da meia-noite
-	}
-	return undef;
+sub onRitmoChegada {
+	my (undef, $a) = @_;
+	setMode('jornada') if $mode eq 'saindo';
+	return unless $loaded && $a->{fala};
+	$lastPublic = 0;
+	dizer('chegada', 70, 1);
 }
 
-# segundos ate a proxima vez que o "jogador" entra
-sub proximaEntrada {
-	my $m = minutoDoDia();
-	my $resta = restaNaJanela($m);
-	# ainda sobra janela: volta mais tarde no mesmo horario (jantou, voltou)
-	return 60 * int(rnd(20, 60)) if defined $resta && $resta > 90 && rand() < 0.4;
-	my $melhor;
-	for my $j (@horarios) {
-		my $d = ($j->[0] - $m) % 1440;
-		$d = 1440 if $d <= 0;
-		$melhor = $d if !defined $melhor || $d < $melhor;
-	}
-	return 60 * ($melhor + int(rand($opt{atraso_entrada_max} + 1)));
+sub onRitmoSaida {
+	my (undef, $a) = @_;
+	return unless $loaded && $char;
+	combate(0);
+	Commands::run('stand') if $char->{sitting} && !$a->{luta};
+	$a->{falou} = 1 if dizer('saida', 85, 1);
+	setMode('saindo');
 }
 
-# devolve 1 se o tick deve parar aqui (fora do horario / saindo)
-sub controlarSessao {
-	return 0 unless @horarios;
-	if ($mode eq 'saindo') {
-		if (time >= $md{fim}) {
-			my $s = proximaEntrada();
-			message sprintf("[%s] fim da sessao; volta em %.1f h.\n", $NAME, $s / 3600), 'success';
-			undef $sessaoFim; setMode('jornada');
-			Commands::run("relog $s");
-		}
-		return 1;
-	}
-	my $resta = restaNaJanela(minutoDoDia());
-	if (!defined $sessaoFim) {
-		if (!defined $resta) {       # entrou fora do horario (bot recem-ligado): sai calado
-			my $s = proximaEntrada();
-			message sprintf("[%s] fora do horario; entra em %.1f h.\n", $NAME, $s / 3600), 'info';
-			Commands::run("relog $s");
-			return 1;
-		}
-		my $dur = rnd($opt{sessao_min}, $opt{sessao_max});
-		$dur = $resta if $dur > $resta;
-		$sessaoFim = time + 60 * $dur;
-		$lastPublic = 0;
-		dizer('chegada', 70, 1);
-		return 0;
-	}
-	if (time >= $sessaoFim && !AI::is('attack')) {
-		combate(0);
-		Commands::run('stand') if $char->{sitting};
-		dizer('saida', 85, 1);
-		setMode('saindo', fim => time + rnd(4, 12));
-		return 1;
-	}
-	return 0;
+sub onRitmoPausa {
+	my (undef, $a) = @_;
+	return unless $loaded && $char && $mode eq 'jornada';
+	my $e = etapaAtual() or return;
+	combate(0);
+	setMode('retorno', city => $e->{city}, dur => $a->{dur});
+	dizer('indo_pausa', 50, 0);
+	$a->{tratado} = 1;
 }
 
 sub setMode { my ($m, %d) = @_; $mode = $m; %md = (%d, since => time); message "[$NAME] modo: $m\n", 'info'; }
@@ -385,7 +347,7 @@ sub tick {
 	}
 
 	processarRespostas();
-	return if controlarSessao();
+	return if $mode eq 'saindo';    # o mazzaRitmo faz o relog
 
 	# ---- maquina de estados ----
 	if ($mode eq 'pausa') {
@@ -452,7 +414,7 @@ sub tick {
 
 	if ($mode eq 'retorno') {
 		if ($map eq $md{city} && !AI::is('route', 'mapRoute')) {
-			setMode('pausa', fim => time + 60 * rnd($opt{pausa_duracao_min}, $opt{pausa_duracao_max}));
+			setMode('pausa', fim => time + ($md{dur} || 60 * rnd($opt{pausa_duracao_min}, $opt{pausa_duracao_max})));
 			Commands::run('sit');
 			dizer('pausa', 70, 1);
 		} elsif (!AI::is('route', 'mapRoute') && time - $lastMoveCmd > 15) {
@@ -499,8 +461,8 @@ sub tick {
 		}
 	}
 
-	# 3) hora da pausa?
-	if (time >= $nextBreak && !AI::is('attack')) {
+	# 3) hora da pausa? (com o mazzaRitmo, ele pede pelo hook mazzaRitmo_pausa)
+	if (!ritmo() && time >= $nextBreak && !AI::is('attack')) {
 		my $e = etapaAtual();
 		if ($e) {
 			combate(0);
@@ -624,10 +586,10 @@ sub cmdJornada {
 		message "[$NAME] historico de viagem zerado.\n", 'success';
 	} else {
 		my $e = $char ? etapaAtual() : undef;
-		message sprintf("[%s] modo=%s | etapa=%s -> %s | proxima pausa em %d min | sessao: %s | visitadas: %s | fechados: %s\n",
+		message sprintf("[%s] modo=%s | etapa=%s -> %s | proxima pausa %s | sessao: %s | visitadas: %s | fechados: %s\n",
 			$NAME, $mode, $e ? "$e->{min}-$e->{max}" : '-', $e ? "$e->{map} ($e->{city})" : '-',
-			$nextBreak ? ($nextBreak - time) / 60 : 0,
-			!@horarios ? 'sempre' : defined $sessaoFim ? sprintf('acaba em %d min', ($sessaoFim - time) / 60) : 'fora',
+			ritmo() ? 'pelo mazzaRitmo' : sprintf('em %d min', $nextBreak ? ($nextBreak - time) / 60 : 0),
+			ritmo() ? 'mazzaRitmo (' . mazzaRitmo::estado() . ')' : 'sempre',
 			join(', ', sort keys %{ $st{visitado} }) || 'nenhuma',
 			join(', ', grep { fechado($_) } sort keys %bloqueado) || 'nenhum'), 'info';
 	}

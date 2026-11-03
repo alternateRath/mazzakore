@@ -10,7 +10,7 @@ Uso (da pasta do mazzakore, <ws>\\openkore):
   python -I mazzaro\\bots\\bots.py --modelos              # modelos de build e personalidades
   python -I mazzaro\\bots\\bots.py --validar              # confere os modelos contra a skill_tree do mazzathena
   python -I mazzaro\\bots\\bots.py --novo bia --modelo bruxo_intdex --personalidade empolgada --sexo F \\
-                                    --horario "19:00-23:30"   # cria mazzaro\\bots\\bia\\ (depois --criar-conta e subir)
+                                    --perfil-horario estudante   # cria mazzaro\\bots\\bia\\ (depois --criar-conta e subir)
 
 Cada bot e uma pasta mazzaro\\bots\\<bot>\\ com bot.yml (perfil, conta, personagem) e control\\ (config.txt so com
 o que muda sobre o padrao, jornada.txt, falas.txt, mon_control.txt, pickupitems.txt).
@@ -40,7 +40,7 @@ KORE = BOTS.parents[1]                            # <mazzakore>
 WS = KORE.parent                                  # workspace
 MZ = WS / 'mazzaro'                               # repo mazzaro (perfis, tools)
 NO_WINDOW, NEW_CONSOLE = 0x08000000, 0x10
-PLUGINS = 'mazzaJornada,raiseStat,raiseSkill,mzctl'
+PLUGINS = 'mazzaJornada,raiseStat,raiseSkill,mzctl,timeoutRandomizer,mazzaRitmo'
 CTL_BASE = 6960                                   # mzctl de cada bot: bot.yml "ctl:" ou 6960 + posicao na lista
 
 sys.path.insert(0, str(BOTS))                     # com python -I a pasta do script nao entra no path
@@ -271,7 +271,8 @@ def main():
     ap.add_argument('--personalidade')
     ap.add_argument('--sexo', choices=['M', 'F'])
     ap.add_argument('--personagem', help='nome do personagem (padrao: o do bot com inicial maiuscula)')
-    ap.add_argument('--horario', help='janelas de jogo, ex. "19:00-23:30 12:00-13:00" (padrao: sempre online)')
+    ap.add_argument('--perfil-horario', choices=list(gerar.PERFIS_HORARIO),
+                    help='agenda do mazzaRitmo (padrao: sorteado, metade estudante)')
     ap.add_argument('--validar', nargs='*', metavar='MODELO', help='confere modelos contra a skill_tree (sem nome: todos)')
     ap.add_argument('--modelos', action='store_true', help='lista modelos e personalidades')
     a = ap.parse_args()
@@ -291,7 +292,7 @@ def main():
     if a.novo:
         if not (a.modelo and a.personalidade):
             ap.error('--novo pede --modelo e --personalidade (veja --modelos)')
-        dst, bot = gerar.novo(a.novo, a.modelo, a.personalidade, a.sexo, a.personagem, a.horario)
+        dst, bot = gerar.novo(a.novo, a.modelo, a.personalidade, a.sexo, a.personagem, a.perfil_horario)
         print(f'{dst} criado: {bot["descricao"]}, conta {bot["conta"]}, mzctl {bot["ctl"]}')
         print(f'  agora: python -I mazzaro\\bots\\bots.py --criar-conta {a.novo}  e  python -I mazzaro\\bots\\bots.py {a.novo}')
         return

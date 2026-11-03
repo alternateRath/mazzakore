@@ -139,7 +139,39 @@ def _personagem_aleatorio(sexo):
     return {'sexo': sexo, 'cabelo': random.randint(1, 23), 'cor_cabelo': random.randint(0, 8)}
 
 
-def novo(nome, mid, pers, sexo=None, personagem=None, horario=None, ctl=None, perfil='kro-2026'):
+# perfis de horario do plugins/mazzaRitmo (regras 1-9 de mazzaro/docs/bots/pesquisa-comportamento.md) e o peso de
+# cada um no sorteio quando --perfil-horario nao e dado (no bRO de 2006, 84% eram estudantes)
+PERFIS_HORARIO = {'estudante': 0.5, 'trabalhador': 0.3, 'noturno': 0.1, 'fim-de-semana': 0.1}
+
+
+def bloco_ritmo(perfil=None, rng=random):
+    """Bloco mazzaRitmo_* do config.txt de um bot: perfil, janela propria, horas, dias, reacao e ping sorteados."""
+    perfil = perfil or rng.choices(list(PERFIS_HORARIO), weights=list(PERFIS_HORARIO.values()))[0]
+    if perfil not in PERFIS_HORARIO:
+        raise SystemExit(f'perfil de horario desconhecido: {perfil} (existentes: {", ".join(PERFIS_HORARIO)})')
+    horas = min(40.0, max(2.0, rng.lognormvariate(0, 0.6) * 10))            # mediana ~10 h/semana, com cauda
+    dias = 3 if perfil == 'fim-de-semana' else rng.randint(3, 6)
+    ping = round(min(200, max(8, rng.lognormvariate(0, 0.5) * 40)))
+    mediana = rng.uniform(0.30, 0.60) / (1 + ping / 200)                      # o plugin multiplica por (1 + ping/200)
+    afk = rng.randint(12, 20)
+    lim = rng.randint(25, 38)
+    return '\n'.join([
+        '######## Ritmo e agenda (plugins/mazzaRitmo; sorteado pelo gerador) ########',
+        'mazzaRitmo 1',
+        f'mazzaRitmo_perfil {perfil}',
+        f'mazzaRitmo_deslocamento {rng.randint(-60, 60)}',
+        f'mazzaRitmo_horas_semana {horas:.1f}',
+        f'mazzaRitmo_dias {dias}',
+        f'mazzaRitmo_reacao {mediana:.2f} {rng.uniform(0.4, 0.6):.2f} {rng.uniform(0.04, 0.08):.2f}',
+        f'mazzaRitmo_ping {ping}',
+        f'mazzaRitmo_afk {afk} {afk + rng.randint(15, 25)} 1 {rng.randint(3, 5)}',
+        f'mazzaRitmo_pausa {rng.randint(40, 50)} {rng.randint(65, 80)} 5 {rng.randint(12, 20)}',
+        f'mazzaRitmo_meio_luta {rng.uniform(0.15, 0.35):.2f}',
+        f'mazzaRitmo_limiar {lim} {min(60, lim + rng.randint(15, 25))}',
+    ]) + '\n'
+
+
+def novo(nome, mid, pers, sexo=None, personagem=None, perfil_horario=None, ctl=None, perfil='kro-2026'):
     """Cria mazzaro/bots/<nome>/ a partir do modelo e da personalidade."""
     if not re.fullmatch(r'[a-z0-9_]{3,20}', nome):
         raise SystemExit('nome do bot: 3-20 letras minusculas, digitos ou _')
@@ -159,9 +191,12 @@ def novo(nome, mid, pers, sexo=None, personagem=None, horario=None, ctl=None, pe
               for p in BOTS.iterdir() if (p / 'bot.yml').exists()}
     ctl = ctl or next(p for p in range(6961, 7100) if p not in usados)
 
+    ritmo = bloco_ritmo(perfil_horario)
+    horario = re.search(r'^mazzaRitmo_perfil (\S+)', ritmo, re.M).group(1)
+
     (dst / 'control').mkdir(parents=True)
-    bot = {'descricao': f'{pj["nome"]}, {m["nome"]} ({pers})', 'perfil': perfil, 'conta': f'mzb_{nome}',
-           'ctl': ctl, 'modelo': mid, 'personalidade': pers, 'personagem': pj}
+    bot = {'descricao': f'{pj["nome"]}, {m["nome"]} ({pers}, {horario})', 'perfil': perfil, 'conta': f'mzb_{nome}',
+           'ctl': ctl, 'modelo': mid, 'personalidade': pers, 'horario': horario, 'personagem': pj}
     (dst / 'bot.yml').write_text(f'# gerado por bots.py --novo {nome} --modelo {mid} --personalidade {pers}\n'
                                  + yaml.safe_dump(bot, allow_unicode=True, sort_keys=False), encoding='utf-8')
 
@@ -169,6 +204,7 @@ def novo(nome, mid, pers, sexo=None, personagem=None, horario=None, ctl=None, pe
     cfg += (f'\n######## Build: {m["nome"]} (modelos/{mid}.yml) ########\n'
             f'statsAddAuto_list {m["stats"]}\n'
             f'skillsAddAuto_list {" ".join(str(m["skills"]).split())}\n\n{m.get("config") or ""}')
+    cfg += '\n' + ritmo
     (dst / 'control' / 'config.txt').write_text(cfg, encoding='utf-8')
 
     troca = {int(k): int(v) for k, v in (m.get('troca_classe') or {}).items()}
@@ -182,8 +218,6 @@ def novo(nome, mid, pers, sexo=None, personagem=None, horario=None, ctl=None, pe
     jl.append('')
     jl.append((MODELOS / '_base' / 'jornada_comum.txt').read_text(encoding='utf-8').rstrip())
     jl.append('')
-    if horario:
-        jl.append(f'horario {horario}')
     jl.append('opcao chance_fala_ambiente ' + str(random.choice([2, 3, 4, 6])))
     jl.append('opcao pausa_a_cada_min ' + str(random.randint(30, 60)))
     jl.append('opcao pausa_a_cada_max ' + str(random.randint(70, 120)))

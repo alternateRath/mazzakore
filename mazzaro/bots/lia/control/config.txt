@@ -134,3 +134,18 @@ useSelf_skill AL_BLESSING {
 	inLockOnly 1
 	notWhileSitting 1
 }
+
+######## Ritmo e agenda (plugins/mazzaRitmo; sorteado pelo gerador) ########
+mazzaRitmo 1
+mazzaRitmo_perfil noturno
+mazzaRitmo_deslocamento -35
+mazzaRitmo_horas_semana 6.0
+mazzaRitmo_dias 4
+mazzaRitmo_reacao 0.42 0.53 0.08
+mazzaRitmo_ping 41
+mazzaRitmo_afk 13 31 1 4
+mazzaRitmo_pausa 47 78 5 17
+mazzaRitmo_meio_luta 0.22
+mazzaRitmo_limiar 25 48
+# era "horario 00:00-23:59" no jornada.txt: sempre on (AFK, pausa e reacao seguem)
+mazzaRitmo_agenda 0

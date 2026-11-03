@@ -37,7 +37,6 @@ loja aldebaran aldeba_in    94  56
 # Mapas que contam como cidade (pausas, Kafra)
 cidade prontera izlude payon morocc geffen aldebaran alberta
 
-horario 00:00-23:59
 opcao chance_fala_ambiente 6
 opcao pausa_a_cada_min 47
 opcao pausa_a_cada_max 115

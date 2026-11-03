@@ -132,3 +132,16 @@ attackSkillSlot MG_FIREWALL {
 	aggressives > 1
 	maxUses 1
 }
+
+######## Ritmo e agenda (plugins/mazzaRitmo; sorteado pelo gerador) ########
+mazzaRitmo 1
+mazzaRitmo_perfil trabalhador
+mazzaRitmo_deslocamento -47
+mazzaRitmo_horas_semana 10.3
+mazzaRitmo_dias 6
+mazzaRitmo_reacao 0.35 0.60 0.06
+mazzaRitmo_ping 41
+mazzaRitmo_afk 17 35 1 3
+mazzaRitmo_pausa 47 73 5 20
+mazzaRitmo_meio_luta 0.15
+mazzaRitmo_limiar 27 43

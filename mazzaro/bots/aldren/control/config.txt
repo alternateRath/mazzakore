@@ -162,3 +162,16 @@ partyAutoShare 0
 guildAutoDeny 1
 dealAuto 1
 ignoreAll 0
+
+######## Ritmo e agenda (plugins/mazzaRitmo; sorteado pelo gerador) ########
+mazzaRitmo 1
+mazzaRitmo_perfil estudante
+mazzaRitmo_deslocamento -40
+mazzaRitmo_horas_semana 7.6
+mazzaRitmo_dias 4
+mazzaRitmo_reacao 0.25 0.56 0.07
+mazzaRitmo_ping 53
+mazzaRitmo_afk 13 31 1 3
+mazzaRitmo_pausa 44 67 5 15
+mazzaRitmo_meio_luta 0.31
+mazzaRitmo_limiar 33 58
