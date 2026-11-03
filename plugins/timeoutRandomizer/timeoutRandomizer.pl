@@ -8,21 +8,9 @@ package OpenKore::Plugins::timeoutRandomizer;
 use strict;
 use warnings;
 
-use File::Basename qw(dirname);
-use File::Spec::Functions qw(catdir rel2abs);
-
-BEGIN {
-        my $plugin_dir = dirname(__FILE__);
-        my $root_dir   = dirname(dirname($plugin_dir));
-
-        my $src_dir  = rel2abs(catdir($root_dir, 'src'));
-        my $deps_dir = rel2abs(catdir($src_dir, 'deps'));
-
-        foreach my $path ($src_dir, $deps_dir) {
-                next unless defined $path && -d $path;
-                unshift @INC, $path unless grep { $_ eq $path } @INC;
-        }
-}
+# mazzakore (2026-11-03): tirado o BEGIN que punha src/ e src/deps no @INC com File::Spec::Functions. O Perl 5.12
+# do start.exe nao traz File::Spec::Functions, o plugin nao compilava e o erro de carga derrubava o bot; dentro do
+# OpenKore o src/ ja esta no @INC.
 
 use Globals qw(%timeout);
 use Log qw(message warning);
@@ -80,9 +68,10 @@ if (_original_timeout_sub()) {
                 my $original = _original_timeout_sub();
                 return unless $original;
 
+                # mazzakore: tempo indefinido e normal no core ("nunca comecou", o timeOut original da true);
+                # o plugin avisava e devolvia falso, e o bot nem entrava no jogo
                 unless (defined $r_time) {
-                        warning "[timeoutRandomizer] Utils::timeOut called with undefined r_time.\n";
-                        return;
+                        return @_ > 1 ? $original->($r_time, $timeout_value) : $original->($r_time);
                 }
 
                 my $meta = ref($r_time) eq 'HASH' ? $r_time->{timeout_randomizer} : undef;
