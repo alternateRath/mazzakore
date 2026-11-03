@@ -1,0 +1,14 @@
+# Papel ALT DE BUFF: noviço/sacer que responde "buff plis" (plugins/mazzaPessoa): secoes papel_* juntadas ao falas.txt pelo gerador.
+# Jeito de escrever dos logs do bRO (mazzaro/docs/bots/pesquisa-bro.md, secao 2). Sem acento (serverEncoding).
+# Variaveis: {nome} {lv} {cidade} {classe} {meta} e, onde houver alguem, {quem}.
+
+[papel_buff_ok]
+toma {quem} ^^
+la vai {quem}
+blza {quem}, segura
+/e 3 {quem}
+
+[papel_buff_sem]
+naum tenho buff ainda {quem} mals
+to sem sp {quem}, espera um pouco
+mals {quem}, sem bencao aki

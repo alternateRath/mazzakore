@@ -128,10 +128,11 @@ def validar(mid):
         for c in p[2].split(','):
             if int(c) not in caminho:
                 erros.append(f'etapa {e}: classe {c} fora do caminho')
-        if p[3] not in mapas:
-            erros.append(f'etapa {e}: mapa {p[3]} desconhecido')
-        elif mapas[p[3]] != 'bro-01':
-            erros.append(f'etapa {e}: {p[3]} so abre no {mapas[p[3]]} (o plugin pula ate la) (aviso)')
+        for mp in p[3].split(','):      # mapa1,mapa2,...: alternativas da etapa (o mazzaRota escolhe por sessao)
+            if mp not in mapas:
+                erros.append(f'etapa {e}: mapa {mp} desconhecido')
+            elif mapas[mp] != 'bro-01':
+                erros.append(f'etapa {e}: {mp} so abre no {mapas[mp]} (o plugin pula ate la) (aviso)')
     return erros
 
 
@@ -171,7 +172,77 @@ def bloco_ritmo(perfil=None, rng=random):
     ]) + '\n'
 
 
-def novo(nome, mid, pers, sexo=None, personagem=None, perfil_horario=None, ctl=None, perfil='kro-2026'):
+# papeis do bRO (plugins/mazzaPessoa, mazzaro/docs/bots/pesquisa-bro.md secao 2): peso no sorteio, modelos que servem
+# (None = qualquer), horario puxado e vetor de Yee base (progresso mecanica competicao socializar relacao equipe
+# descoberta roleplay customizacao escapismo); o gerador tira +-0,15 de cada motivacao
+PAPEIS_DIR = BOTS / 'papeis'
+YEE = 'progresso mecanica competicao socializar relacao equipe descoberta roleplay customizacao escapismo'.split()
+PAPEIS = {
+    'novato':   {'peso': 2,   'modelos': None, 'yee': [.5, .3, .2, .7, .5, .4, .7, .4, .5, .5]},
+    'mentor':   {'peso': 1,   'modelos': None, 'yee': [.5, .7, .4, .8, .8, .7, .4, .5, .4, .4]},
+    'familia':  {'peso': 1,   'modelos': None, 'yee': [.4, .4, .5, .8, .9, .9, .3, .6, .5, .5]},
+    'vendedor': {'peso': 1,   'modelos': ['ferreiro_batalha'], 'yee': [.6, .5, .4, .6, .4, .3, .3, .4, .7, .3]},
+    'buff':     {'peso': 1,   'modelos': ['sacerdote_suporte', 'sacerdote_batalha'],
+                 'yee': [.3, .4, .2, .7, .6, .8, .3, .4, .4, .5]},
+    'pedinte':  {'peso': 0.5, 'modelos': None, 'yee': [.3, .2, .3, .6, .3, .2, .4, .5, .6, .6]},
+    'quieto':   {'peso': 2,   'modelos': None, 'yee': [.9, .7, .5, .1, .2, .2, .4, .1, .3, .6]},
+    'zoeiro':   {'peso': 1.5, 'modelos': None, 'yee': [.5, .5, .7, .8, .4, .5, .5, .5, .4, .6]},
+    'casual':   {'peso': 1,   'modelos': None, 'horario': 'fim-de-semana',
+                 'yee': [.4, .3, .3, .5, .5, .4, .6, .3, .5, .8]},
+}
+
+
+def papel_para(mid, papel=None, rng=random):
+    """O papel pedido (conferindo o modelo) ou um sorteado entre os que servem ao modelo."""
+    if papel:
+        if papel not in PAPEIS:
+            raise SystemExit(f'papel desconhecido: {papel} (existentes: {", ".join(PAPEIS)})')
+        if PAPEIS[papel]['modelos'] and mid not in PAPEIS[papel]['modelos']:
+            raise SystemExit(f'papel {papel} pede um destes modelos: {", ".join(PAPEIS[papel]["modelos"])}')
+        return papel
+    ok = [k for k, v in PAPEIS.items() if not v['modelos'] or mid in v['modelos']]
+    return rng.choices(ok, weights=[PAPEIS[k]['peso'] for k in ok])[0]
+
+
+def bloco_pessoa(papel, rng=random):
+    """Bloco mazzaPessoa_* do config.txt: papel e vetor de Yee (base do papel +- 0,15)."""
+    yee = [min(1, max(0, v + rng.uniform(-0.15, 0.15))) for v in PAPEIS[papel]['yee']]
+    return '\n'.join([
+        '######## Persona (plugins/mazzaPessoa; sorteado pelo gerador) ########',
+        '# vetor de Yee: ' + ' '.join(YEE),
+        'mazzaPessoa 1',
+        f'mazzaPessoa_papel {papel}',
+        'mazzaPessoa_yee ' + ' '.join(f'{v:.2f}' for v in yee),
+        f'mazzaPessoa_deriva {rng.uniform(0.08, 0.14):.2f}',
+    ]) + '\n'
+
+
+def bloco_rota(rng=random):
+    """Bloco mazzaRota_* e drunk_* do config.txt: permanencia, saltos, paradas e mapas por sessao sorteados."""
+    perm = rng.randint(8, 14)
+    salto = rng.randint(6, 10)
+    um = rng.randint(35, 55)                                  # >40% das sessoes numa zona so (Pittman 2010)
+    dois = rng.randint(25, 40)
+    return '\n'.join([
+        '######## Rotas (plugins/mazzaRota + Drunk; sorteado pelo gerador) ########',
+        'mazzaRota 1',
+        f'mazzaRota_permanencia {perm} {perm + rng.randint(14, 22)}',
+        f'mazzaRota_salto {salto} {salto + rng.randint(18, 26)}',
+        f'mazzaRota_parada {rng.uniform(0.25, 0.45):.2f} 3 {rng.randint(12, 25)}',
+        f'mazzaRota_volta {rng.uniform(0.03, 0.08):.2f}',
+        f'mazzaRota_longe {rng.uniform(0.08, 0.2):.2f}',
+        f'mazzaRota_mapas {um} {dois} {100 - um - dois}',
+        f'mazzaRota_troca {rng.randint(12, 20)} {rng.randint(35, 55)}',
+        f'mazzaRota_cidade 1 {rng.randint(2, 4)} 10 {rng.randint(40, 90)}',
+        f'drunk {rng.randint(3, 6)}',
+        'drunk_curves 1',
+        f'drunk_curveWeight {rng.randint(30, 50)}',
+        f'drunk_chance {rng.randint(55, 80)}',
+        'drunk_minDist 15',
+    ]) + '\n'
+
+
+def novo(nome, mid, pers, sexo=None, personagem=None, perfil_horario=None, ctl=None, perfil='kro-2026', papel=None):
     """Cria mazzaro/bots/<nome>/ a partir do modelo e da personalidade."""
     if not re.fullmatch(r'[a-z0-9_]{3,20}', nome):
         raise SystemExit('nome do bot: 3-20 letras minusculas, digitos ou _')
@@ -191,12 +262,14 @@ def novo(nome, mid, pers, sexo=None, personagem=None, perfil_horario=None, ctl=N
               for p in BOTS.iterdir() if (p / 'bot.yml').exists()}
     ctl = ctl or next(p for p in range(6961, 7100) if p not in usados)
 
-    ritmo = bloco_ritmo(perfil_horario)
+    papel = papel_para(mid, papel)
+    ritmo = bloco_ritmo(perfil_horario or PAPEIS[papel].get('horario'))
     horario = re.search(r'^mazzaRitmo_perfil (\S+)', ritmo, re.M).group(1)
 
     (dst / 'control').mkdir(parents=True)
-    bot = {'descricao': f'{pj["nome"]}, {m["nome"]} ({pers}, {horario})', 'perfil': perfil, 'conta': f'mzb_{nome}',
-           'ctl': ctl, 'modelo': mid, 'personalidade': pers, 'horario': horario, 'personagem': pj}
+    bot = {'descricao': f'{pj["nome"]}, {m["nome"]} ({papel}, {pers}, {horario})', 'perfil': perfil,
+           'conta': f'mzb_{nome}', 'ctl': ctl, 'modelo': mid, 'personalidade': pers, 'papel': papel,
+           'horario': horario, 'personagem': pj}
     (dst / 'bot.yml').write_text(f'# gerado por bots.py --novo {nome} --modelo {mid} --personalidade {pers}\n'
                                  + yaml.safe_dump(bot, allow_unicode=True, sort_keys=False), encoding='utf-8')
 
@@ -204,7 +277,7 @@ def novo(nome, mid, pers, sexo=None, personagem=None, perfil_horario=None, ctl=N
     cfg += (f'\n######## Build: {m["nome"]} (modelos/{mid}.yml) ########\n'
             f'statsAddAuto_list {m["stats"]}\n'
             f'skillsAddAuto_list {" ".join(str(m["skills"]).split())}\n\n{m.get("config") or ""}')
-    cfg += '\n' + ritmo
+    cfg += '\n' + ritmo + '\n' + bloco_rota() + '\n' + bloco_pessoa(papel)
     (dst / 'control' / 'config.txt').write_text(cfg, encoding='utf-8')
 
     troca = {int(k): int(v) for k, v in (m.get('troca_classe') or {}).items()}
@@ -223,7 +296,7 @@ def novo(nome, mid, pers, sexo=None, personagem=None, perfil_horario=None, ctl=N
     jl.append('opcao pausa_a_cada_max ' + str(random.randint(70, 120)))
     (dst / 'control' / 'jornada.txt').write_text('\n'.join(jl) + '\n', encoding='utf-8')
 
-    falas = ptxt.read_text(encoding='utf-8')
+    falas = ptxt.read_text(encoding='utf-8').rstrip() + '\n\n' + (PAPEIS_DIR / f'{papel}.txt').read_text(encoding='utf-8')
     (dst / 'control' / 'falas.txt').write_text(falas, encoding='utf-8')
     for f in ('mon_control.txt', 'pickupitems.txt'):
         (dst / 'control' / f).write_text((MODELOS / '_base' / f).read_text(encoding='utf-8'), encoding='utf-8')

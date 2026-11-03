@@ -33,12 +33,12 @@ config: |
   	disabled 1
   }
 etapas:
-  - 1 12 0 prt_fild08 prontera
-  - 1 18 1 prt_fild08 prontera
+  - 1 12 0 prt_fild08,prt_fild05,prt_fild06 prontera
+  - 1 18 1 prt_fild08,prt_fild05,prt_fild06 prontera
   - 19 28 1 pay_dun00 payon
-  - 29 40 1 orcsdun01 geffen
-  - 41 99 1 orcsdun01 geffen
-  - 1 55 7 orcsdun01 geffen
+  - 29 40 1 orcsdun01,gef_fild02,gef_fild03 geffen
+  - 41 99 1 orcsdun01,gef_fild02,gef_fild03 geffen
+  - 1 55 7 orcsdun01,gef_fild02,gef_fild03 geffen
   - 56 70 7 mjo_dun03 aldebaran      # Mina de Carvao 3
-  - 71 85 7 orcsdun02 geffen
+  - 71 85 7 orcsdun02,gef_fild10,gef_fild08 geffen
   - 86 99 7 alde_dun02 aldebaran     # Torre do Relogio B2: High Orc

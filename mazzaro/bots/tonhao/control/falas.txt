@@ -86,3 +86,16 @@ to upando aqui, manda ai
 [bloqueado]
 la ainda nao abriu? que servidor eh esse huahua
 /e 1 mapa fechado, vou zoar em outro canto
+
+# Papel VENDEDOR: anuncia na cidade durante a pausa (plugins/mazzaPessoa): secoes papel_* juntadas ao falas.txt pelo gerador.
+# Jeito de escrever dos logs do bRO (mazzaro/docs/bots/pesquisa-bro.md, secao 2). Sem acento (serverEncoding).
+# Variaveis: {nome} {lv} {cidade} {classe} {meta} e, onde houver alguem, {quem}.
+
+[papel_anuncio]
+S> jellopy, pele de lobo, cascas, chama no pm
+S> pocao vermelha baratinha
+C> carta de poring, pago bem
+S> faca [3] e espada, preco bom
+S> felpa e garra de lobo, pm
+C> trevo de quatro folhas
+vendo tudo q pegar hoje, so chamar ^^

@@ -33,11 +33,11 @@ config: |
   	inLockOnly 1
   }
 etapas:
-  - 1 12 0 prt_fild08 prontera
-  - 1 20 5 prt_fild08 prontera
+  - 1 12 0 prt_fild08,prt_fild05,prt_fild06 prontera
+  - 1 20 5 prt_fild08,prt_fild05,prt_fild06 prontera
   - 21 32 5 prt_sewb2 prontera
-  - 33 99 5 orcsdun01 geffen
-  - 1 55 10 orcsdun01 geffen
+  - 33 99 5 orcsdun01,gef_fild02,gef_fild03 geffen
+  - 1 55 10 orcsdun01,gef_fild02,gef_fild03 geffen
   - 56 70 10 xmas_dun02 alberta       # Fabrica de Brinquedos 2: Cruiser, Myst Case (ida por Lutie)
-  - 71 85 10 alde_dun04 aldebaran     # Torre do Relogio B4: Bathory
+  - 71 85 10 alde_dun04,alde_dun03 aldebaran     # Torre do Relogio B4: Bathory
   - 86 99 10 alde_dun02 aldebaran

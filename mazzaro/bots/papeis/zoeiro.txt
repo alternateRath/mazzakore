@@ -1,0 +1,12 @@
+# Papel ZOEIRO: implica e ri de tudo com gente perto (plugins/mazzaPessoa): secoes papel_* juntadas ao falas.txt pelo gerador.
+# Jeito de escrever dos logs do bRO (mazzaro/docs/bots/pesquisa-bro.md, secao 2). Sem acento (serverEncoding).
+# Variaveis: {nome} {lv} {cidade} {classe} {meta} e, onde houver alguem, {quem}.
+
+[papel_zoeira]
+huehuehue
+quem eh o nob aki? brinks ^^
+ks naum hein, to de olho
+esse mapa ta lotado, vou dar gs huahua
+rsrsrs alguem viu meu poring?
+lag ta tenso hj
+kkk vcs andam muito parado

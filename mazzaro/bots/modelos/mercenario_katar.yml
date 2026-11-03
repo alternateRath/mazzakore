@@ -26,8 +26,8 @@ config: |
   	disabled 1
   }
 etapas:
-  - 1 12 0 prt_fild08 prontera
-  - 1 18 6 pay_fild04 payon
+  - 1 12 0 prt_fild08,prt_fild05,prt_fild06 prontera
+  - 1 18 6 pay_fild04,pay_fild08 payon
   - 19 34 6 prt_sewb2 prontera
   - 35 99 6 moc_fild18 morocc         # Muka
   - 1 50 12 xmas_dun02 alberta

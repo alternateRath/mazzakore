@@ -1,0 +1,3 @@
+# Papel FARMADOR QUIETO: upa calado (o mazzaPessoa so tira a fala e o passeio) (plugins/mazzaPessoa): secoes papel_* juntadas ao falas.txt pelo gerador.
+# Jeito de escrever dos logs do bRO (mazzaro/docs/bots/pesquisa-bro.md, secao 2). Sem acento (serverEncoding).
+# Variaveis: {nome} {lv} {cidade} {classe} {meta} e, onde houver alguem, {quem}.

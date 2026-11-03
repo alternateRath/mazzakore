@@ -1,0 +1,10 @@
+# Papel FAMILIA DO CLA: chama a guilda de familia, recruta, "pai/papi" (plugins/mazzaPessoa): secoes papel_* juntadas ao falas.txt pelo gerador.
+# Jeito de escrever dos logs do bRO (mazzaro/docs/bots/pesquisa-bro.md, secao 2). Sem acento (serverEncoding).
+# Variaveis: {nome} {lv} {cidade} {classe} {meta} e, onde houver alguem, {quem}.
+
+[papel_recruta]
+guild recrutando! somos uma familia, todo mundo ajuda todo mundo
+alguem sem guild? chama no pm ^^
+nossa guild empresta equip pros novatos, so pedir pro papi
+recrutando pessoal de boa, sem estresse
+quem quiser guild eh so falar comigo, tem lugar pra todo mundo

@@ -40,7 +40,7 @@ KORE = BOTS.parents[1]                            # <mazzakore>
 WS = KORE.parent                                  # workspace
 MZ = WS / 'mazzaro'                               # repo mazzaro (perfis, tools)
 NO_WINDOW, NEW_CONSOLE = 0x08000000, 0x10
-PLUGINS = 'mazzaJornada,raiseStat,raiseSkill,mzctl,timeoutRandomizer,mazzaRitmo'
+PLUGINS = 'mazzaJornada,raiseStat,raiseSkill,mzctl,timeoutRandomizer,mazzaRitmo,Drunk,mazzaRota,mazzaPessoa'
 CTL_BASE = 6960                                   # mzctl de cada bot: bot.yml "ctl:" ou 6960 + posicao na lista
 
 sys.path.insert(0, str(BOTS))                     # com python -I a pasta do script nao entra no path
@@ -273,6 +273,8 @@ def main():
     ap.add_argument('--personagem', help='nome do personagem (padrao: o do bot com inicial maiuscula)')
     ap.add_argument('--perfil-horario', choices=list(gerar.PERFIS_HORARIO),
                     help='agenda do mazzaRitmo (padrao: sorteado, metade estudante)')
+    ap.add_argument('--papel', choices=list(gerar.PAPEIS),
+                    help='papel do bRO (plugins/mazzaPessoa; padrao: sorteado entre os que servem ao modelo)')
     ap.add_argument('--validar', nargs='*', metavar='MODELO', help='confere modelos contra a skill_tree (sem nome: todos)')
     ap.add_argument('--modelos', action='store_true', help='lista modelos e personalidades')
     a = ap.parse_args()
@@ -280,6 +282,8 @@ def main():
         for mid in gerar.modelos_disponiveis():
             print(f'{mid:20} {gerar.carregar_modelo(mid)["nome"]}')
         print('personalidades:', ', '.join(gerar.personalidades_disponiveis()))
+        print('papeis:', ', '.join(f'{k}' + (f' ({"/".join(v["modelos"])})' if v['modelos'] else '')
+                                   for k, v in gerar.PAPEIS.items()))
         return
     if a.validar is not None:
         ruim = 0
@@ -292,7 +296,8 @@ def main():
     if a.novo:
         if not (a.modelo and a.personalidade):
             ap.error('--novo pede --modelo e --personalidade (veja --modelos)')
-        dst, bot = gerar.novo(a.novo, a.modelo, a.personalidade, a.sexo, a.personagem, a.perfil_horario)
+        dst, bot = gerar.novo(a.novo, a.modelo, a.personalidade, a.sexo, a.personagem, a.perfil_horario,
+                              papel=a.papel)
         print(f'{dst} criado: {bot["descricao"]}, conta {bot["conta"]}, mzctl {bot["ctl"]}')
         print(f'  agora: python -I mazzaro\\bots\\bots.py --criar-conta {a.novo}  e  python -I mazzaro\\bots\\bots.py {a.novo}')
         return

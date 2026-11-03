@@ -44,9 +44,9 @@ config: |
   }
 # Heal/Turn Undead so nos mortos-vivos do bro-01 (attackSkillSlot monsters <ids>); o resto apanha na maca
 etapas:
-  - 1 12 0 prt_fild08 prontera
+  - 1 12 0 prt_fild08,prt_fild05,prt_fild06 prontera
   - 1 30 4 pay_dun00 payon
   - 31 99 4 pay_dun01 payon
-  - 1 55 8 orcsdun01 geffen
+  - 1 55 8 orcsdun01,gef_fild02,gef_fild03 geffen
   - 56 70 8 gl_chyard geffen
   - 71 99 8 in_sphinx4 morocc

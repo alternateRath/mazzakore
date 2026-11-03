@@ -40,11 +40,11 @@ config: |
   	maxUses 1
   }
 etapas:
-  - 1 12 0 prt_fild08 prontera
-  - 1 20 2 prt_fild08 prontera
+  - 1 12 0 prt_fild08,prt_fild05,prt_fild06 prontera
+  - 1 20 2 prt_fild08,prt_fild05,prt_fild06 prontera
   - 21 32 2 pay_dun00 payon          # Fire Bolt nos zumbis
-  - 33 99 2 orcsdun01 geffen
-  - 1 55 9 orcsdun01 geffen
-  - 56 70 9 c_tower2 aldebaran       # Clock, Rideword
+  - 33 99 2 orcsdun01,gef_fild02,gef_fild03 geffen
+  - 1 55 9 orcsdun01,gef_fild02,gef_fild03 geffen
+  - 56 70 9 c_tower2,c_tower1 aldebaran       # Clock, Rideword
   - 71 85 9 gl_sew03 geffen          # Sting
   - 86 99 9 alde_dun02 aldebaran     # High Orc (Storm Gust)

@@ -5,6 +5,7 @@ conta: mzb_tonhao
 ctl: 6962
 modelo: ferreiro_batalha
 personalidade: zoeiro
+papel: vendedor
 personagem:
   nome: Tonhao
   slot: 0

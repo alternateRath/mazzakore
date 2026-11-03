@@ -9,3 +9,4 @@ personagem:                # o plugin cria se o slot estiver vazio
   sexo: M
   cabelo: 5
   cor_cabelo: 2
+papel: mentor

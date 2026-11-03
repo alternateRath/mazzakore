@@ -1,0 +1,16 @@
+# Papel PEDINTE: sala perto da Kafra e pedido de pocao (plugins/mazzaPessoa): secoes papel_* juntadas ao falas.txt pelo gerador.
+# Jeito de escrever dos logs do bRO (mazzaro/docs/bots/pesquisa-bro.md, secao 2). Sem acento (serverEncoding).
+# Variaveis: {nome} {lv} {cidade} {classe} {meta} e, onde houver alguem, {quem}.
+
+[papel_sala]
+Doa 7z e seja feliz
+Esmola pro nob
+ajuda um aprendiz pobre
+Doa 1 pot pfv
+
+[papel_pedido]
+ALGUEM ME DA UMA POCAO POR FAVOR
+sou pobre me ajuda ;x
+doa 7z pra mim, Deus te pague
+qualquer zeny ajuda gente
+alguem tem pocao sobrando?

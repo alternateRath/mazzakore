@@ -12,15 +12,15 @@
 #  A primeira linha que bate com nivel base + classe atual vale.
 #  Monstros conferidos em npc/pre-re/mobs do mazzathena.
 # -----------------------------------------------------------------------------
-etapa  1  12  0    prt_fild08  prontera   # Sul de Prontera: Poring, Lunatic, Pupa, Drops
-etapa  1  17  1    prt_fild08  prontera   # primeiros dias de Espadachim
+etapa  1  12  0    prt_fild08,prt_fild05,prt_fild06  prontera   # Sul de Prontera: Poring, Lunatic, Pupa, Drops
+etapa  1  17  1    prt_fild08,prt_fild05,prt_fild06  prontera   # primeiros dias de Espadachim
 etapa 18  26  1    pay_dun00   payon      # Caverna de Payon 1: Zombie, Skeleton, Familiar, Poporing
 etapa 27  35  1    iz_dun00    izlude     # Ilha de Byalan 1: Plankton, Marina, Hydra, Vadon, Kukre
 etapa 36  45  1    anthell01   morocc     # Formigueiro Infernal 1: Andre, Piere, Deniro, Vitata
-etapa 46  99  1    orcsdun01   geffen     # Masmorra dos Orcs 1: Orc Zombie, Orc Skeleton (se ainda nao virou cavaleiro)
-etapa  1  58  7    orcsdun01   geffen     # primeiras missoes como Cavaleiro
+etapa 46  99  1    orcsdun01,gef_fild02,gef_fild03   geffen     # Masmorra dos Orcs 1: Orc Zombie, Orc Skeleton (se ainda nao virou cavaleiro)
+etapa  1  58  7    orcsdun01,gef_fild02,gef_fild03   geffen     # primeiras missoes como Cavaleiro
 etapa 59  79  7    c_tower1    aldebaran  # Torre do Relogio 1: Punk, Rideword
-etapa 80  99  7    gl_knt01    geffen     # Glast Heim, salao dos cavaleiros: Raydric, Khalitzburg, Abysmal Knight
+etapa 80  99  7    gl_knt01,gl_step    geffen     # Glast Heim, salao dos cavaleiros: Raydric, Khalitzburg, Abysmal Knight
 
 # -----------------------------------------------------------------------------
 # classe <deID> <paraID> <jobLvMin> <mapa> <x> <y> <sequencia talknpc>

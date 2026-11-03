@@ -1,12 +1,12 @@
 # Tonhao - Ferreiro de batalha (machado) - gerado de modelos/ferreiro_batalha.yml (editar a vontade)
 
-etapa 1 12 0 prt_fild08 prontera
-etapa 1 20 5 prt_fild08 prontera
+etapa 1 12 0 prt_fild08,prt_fild05,prt_fild06 prontera
+etapa 1 20 5 prt_fild08,prt_fild05,prt_fild06 prontera
 etapa 21 32 5 prt_sewb2 prontera
-etapa 33 99 5 orcsdun01 geffen
-etapa 1 55 10 orcsdun01 geffen
+etapa 33 99 5 orcsdun01,gef_fild02,gef_fild03 geffen
+etapa 1 55 10 orcsdun01,gef_fild02,gef_fild03 geffen
 etapa 56 70 10 xmas_dun02 alberta
-etapa 71 85 10 alde_dun04 aldebaran
+etapa 71 85 10 alde_dun04,alde_dun03 aldebaran
 etapa 86 99 10 alde_dun02 aldebaran
 
 classe 0 5 10 alberta_in 56 39 c r0 c

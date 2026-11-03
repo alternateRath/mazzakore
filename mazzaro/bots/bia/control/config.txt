@@ -145,3 +145,26 @@ mazzaRitmo_afk 17 35 1 3
 mazzaRitmo_pausa 47 73 5 20
 mazzaRitmo_meio_luta 0.15
 mazzaRitmo_limiar 27 43
+
+######## Rotas (plugins/mazzaRota + Drunk; sorteado pelo gerador) ########
+mazzaRota 1
+mazzaRota_permanencia 11 28
+mazzaRota_salto 8 30
+mazzaRota_parada 0.36 3 22
+mazzaRota_volta 0.05
+mazzaRota_longe 0.18
+mazzaRota_mapas 44 31 25
+mazzaRota_troca 14 44
+mazzaRota_cidade 1 3 10 72
+drunk 6
+drunk_curves 1
+drunk_curveWeight 48
+drunk_chance 57
+drunk_minDist 15
+
+######## Persona (plugins/mazzaPessoa; sorteado pelo gerador) ########
+# vetor de Yee: progresso mecanica competicao socializar relacao equipe descoberta roleplay customizacao escapismo
+mazzaPessoa 1
+mazzaPessoa_papel novato
+mazzaPessoa_yee 0.48 0.22 0.31 0.68 0.56 0.52 0.68 0.47 0.64 0.41
+mazzaPessoa_deriva 0.09

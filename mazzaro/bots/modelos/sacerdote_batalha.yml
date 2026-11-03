@@ -38,11 +38,11 @@ config: |
   	sp > 15%
   }
 etapas:
-  - 1 12 0 prt_fild08 prontera
-  - 1 18 4 prt_fild08 prontera
+  - 1 12 0 prt_fild08,prt_fild05,prt_fild06 prontera
+  - 1 18 4 prt_fild08,prt_fild05,prt_fild06 prontera
   - 19 30 4 pay_dun00 payon          # mortos-vivos: Demon Bane brilha aqui
-  - 31 99 4 orcsdun01 geffen
-  - 1 50 8 orcsdun01 geffen
+  - 31 99 4 orcsdun01,gef_fild02,gef_fild03 geffen
+  - 1 50 8 orcsdun01,gef_fild02,gef_fild03 geffen
   - 51 65 8 gl_chyard geffen         # Cemiterio de Glast Heim
   - 66 80 8 in_sphinx4 morocc        # Anubis (em grupo, na vida real)
   - 81 99 8 gl_church geffen

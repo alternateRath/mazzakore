@@ -1,0 +1,11 @@
+# Papel VETERANO MENTOR: puxa conversa com aprendiz, ensina o basico (plugins/mazzaPessoa): secoes papel_* juntadas ao falas.txt pelo gerador.
+# Jeito de escrever dos logs do bRO (mazzaro/docs/bots/pesquisa-bro.md, secao 2). Sem acento (serverEncoding).
+# Variaveis: {nome} {lv} {cidade} {classe} {meta} e, onde houver alguem, {quem}.
+
+[papel_mentor]
+oi {quem}, eh novo? precisa de ajuda?
+{quem} vai upar aonde? se quiser eu te mostro um lugar bom
+e ai {quem}, ja salvou na kafra? se morrer volta pra ca
+/e 2 {quem} quer dica? mata poring e pega as jellopy
+{quem} eh nob? relaxa, todo mundo ja foi ^^
+fala {quem}, ja escolheu a classe?

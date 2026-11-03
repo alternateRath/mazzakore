@@ -40,7 +40,7 @@ python -I mazzaro\bots\bots.py --listar
 ```
 - `bots.py` gera em `<ws>\run\bots\<bot>\` o `config.txt` (dois `!include`: o padrão do clone e o
   `control\config.txt` do bot, mais conta e personagem do `bot.yml`), o `sys.txt` (plugins
-  `mazzaJornada,raiseStat,raiseSkill,mzctl,timeoutRandomizer,mazzaRitmo`)
+  `mazzaJornada,raiseStat,raiseSkill,mzctl,timeoutRandomizer,mazzaRitmo,Drunk,mazzaRota`)
   e o `servers.txt` (o mesmo bloco do `tools\mz\kore.py`). Nada é escrito no clone.
 - Recusa subir se o perfil no ar não for o do bot (lido do `tools\mz\profiles.py` do mazzaro).
 - Logs e o estado da jornada (`jornada_<personagem>.txt`: cidades visitadas, Kafras, turismo) em
@@ -48,7 +48,8 @@ python -I mazzaro\bots\bots.py --listar
 - Conta vazia: o plugin cria o personagem do `bot.yml` no slot pedido.
 
 No console do OpenKore: `jornada` (estado), `jornada pausa`, `jornada retomar`, `jornada reset`;
-`ritmo` (estado), `ritmo agenda [dias]`, `ritmo simular [semanas]`, `ritmo sair`, `ritmo afk`, `ritmo pausa` (AFK e pausa na hora).
+`ritmo` (estado), `ritmo agenda [dias]`, `ritmo simular [semanas]`, `ritmo sair`, `ritmo afk`, `ritmo pausa` (AFK e pausa na hora);
+`rota` (estado), `rota grade`, `rota memoria`, `rota trocar`, `rota passeio`.
 
 ## Novo bot (gerador)
 ```
@@ -66,7 +67,9 @@ python -I mazzaro\bots\bots.py --criar-conta bia
   (o bot fica parado e o NPC recusa) viram erro. `--novo` recusa modelo com erro.
 - `--perfil-horario estudante|trabalhador|noturno|fim-de-semana` (sem ele: sorteado, metade estudante): o gerador
   escreve no `control\config.txt` o bloco `mazzaRitmo_*` com perfil, janela própria, horas por semana, dias, reação,
-  ping, AFK, pausa e limiares sorteados para o bot (ver "Ritmo e agenda" abaixo).
+  ping, AFK, pausa e limiares sorteados para o bot (ver "Ritmo e agenda" abaixo), e o bloco `mazzaRota_*`/`drunk_*`
+  com permanência, saltos, paradas e mapas por sessão (ver "Rotas" abaixo).
+- Etapa com `mapa1,mapa2,...`: alternativas da mesma faixa (o `--validar` confere cada uma no bro-01).
 - O `items_control.txt` é gerado em `run\bots\<bot>\control`: vende o loot no Tool Dealer da cidade-base
   (linhas `loja`) e guarda poção, asa, gema, flecha, minério, caixa e todas as cartas.
 
@@ -96,6 +99,14 @@ Fase F1 do [plano](../../../mazzaro/docs/bots/PLANO-JOGADORES.md), regras 1-9 da
   `logs\ritmo_<conta>.log` (para a régua).
 - Hooks para os outros plugins: `mazzaRitmo_chegada {fala}`, `mazzaRitmo_saida {luta, falou}`,
   `mazzaRitmo_pausa {dur, tratado}`; `mazzaRitmo::parado()`, `mazzaRitmo::agenda()`, `mazzaRitmo::estado()`.
+
+## Rotas (`plugins/mazzaRota` + `plugins/Drunk`)
+Fase F2 do plano, regras 10-12 da pesquisa ([README do plugin](../../plugins/mazzaRota/README.md)). No `lockMap` o
+`randomWalk` do core vira: sub-áreas preferidas de cada bot (10-30 min em cada, quase sempre passando para uma
+vizinha), destino escolhido pelo que menos repete trecho da última hora, paradas olhando em volta, às vezes voltar
+a um ponto anterior; o Drunk entorta cada rota. Etapa com mapas alternativos: 1-3 mapas por sessão (troca depois
+de 15-45 min). Na pausa, antes de sentar, o bot passa por 1-3 lugares da cidade (Kafra, lojas, perto de gente, o
+ponto da cidade). Teste rápido: `mazzaRota_teste 6` (minutos viram 6 s) e `mazzaRota_mapas 0 0 100`.
 
 Bot feito à mão: copiar `aldren\`, trocar `bot.yml` (conta, personagem, `ctl`) e reescrever o `control\`.
 

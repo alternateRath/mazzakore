@@ -40,11 +40,11 @@ config: |
   	mazzaLoja 1
   }
 etapas:
-  - 1 12 0 prt_fild08 prontera
-  - 1 18 3 pay_fild07 payon          # floresta de Payon: Willow, Spore
-  - 19 30 3 pay_fild04 payon
+  - 1 12 0 prt_fild08,prt_fild05,prt_fild06 prontera
+  - 1 18 3 pay_fild07,pay_fild09,pay_fild02 payon          # floresta de Payon: Willow, Spore
+  - 19 30 3 pay_fild04,pay_fild08 payon
   - 31 99 3 mjolnir_11 payon         # Flora, Mandragora
   - 1 50 11 pay_fild10 payon         # Grande General
   - 51 65 11 cmd_fild01 payon        # Floresta de Papuchicha: Alligator, Savage
-  - 66 80 11 c_tower2 aldebaran
+  - 66 80 11 c_tower2,c_tower1 aldebaran
   - 81 99 11 gl_sew03 geffen

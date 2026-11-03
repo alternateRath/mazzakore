@@ -5,6 +5,7 @@ conta: mzb_lia
 ctl: 6963
 modelo: sacerdote_suporte
 personalidade: timido
+papel: buff
 personagem:
   nome: LiaSacer
   slot: 0

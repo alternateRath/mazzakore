@@ -1,9 +1,9 @@
 # LiaSacer - Sacerdote de suporte (Heal em morto-vivo) - gerado de modelos/sacerdote_suporte.yml (editar a vontade)
 
-etapa 1 12 0 prt_fild08 prontera
+etapa 1 12 0 prt_fild08,prt_fild05,prt_fild06 prontera
 etapa 1 30 4 pay_dun00 payon
 etapa 31 99 4 pay_dun01 payon
-etapa 1 55 8 orcsdun01 geffen
+etapa 1 55 8 orcsdun01,gef_fild02,gef_fild03 geffen
 etapa 56 70 8 gl_chyard geffen
 etapa 71 99 8 in_sphinx4 morocc
 

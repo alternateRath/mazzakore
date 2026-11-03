@@ -96,3 +96,19 @@ oi! quer fazer pt?
 [bloqueado]
 ue, nao da pra entrar la ainda? q pena
 /e 1 diz q ainda nao descobriram esse lugar
+
+# Papel NOVATO: aprendiz perdido, pergunta tudo, aceita ajuda (plugins/mazzaPessoa): secoes papel_* juntadas ao falas.txt pelo gerador.
+# Jeito de escrever dos logs do bRO (mazzaro/docs/bots/pesquisa-bro.md, secao 2). Sem acento (serverEncoding).
+# Variaveis: {nome} {lv} {cidade} {classe} {meta} e, onde houver alguem, {quem}.
+
+[papel_pergunta]
+alguem sabe onde fica o npc de {meta}?
+como q eu salvo na kafra?
+q mob da mais xp aki?
+gente pq meu peso ta vermelho?
+onde vende pocao barata?
+oq eh ks?
+alguem me ajuda a upar? sou nob ^^
+como faz pra sentar? meu hp naum sobe
+vale a pena ser {meta}?
+oq eu faco com essas jellopy?

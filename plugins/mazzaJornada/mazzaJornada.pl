@@ -106,7 +106,9 @@ sub loadData {
 		my $k = shift @t;
 		if ($k eq 'etapa' && @t >= 5) {
 			my ($min, $max, $jobs, $map, $city) = @t;
-			push @etapas, { min => $min, max => $max, map => $map, city => $city,
+			# mapa pode ser "a,b,c": alternativas da etapa (o mazzaRota escolhe 1-3 por sessao)
+			my @maps = split /,/, $map;
+			push @etapas, { min => $min, max => $max, map => $maps[0], maps => \@maps, city => $city,
 			                jobs => { map { $_ => 1 } split /,/, $jobs } };
 			$cidades{$city} = 1;
 		} elsif ($k eq 'classe' && @t >= 6) {
@@ -219,9 +221,16 @@ sub dizer {
 	return 1;
 }
 
+# ------------------------------------------ API para os outros plugins (mazzaPessoa) ---
+sub opcao   { my ($k, $v) = @_; $opt{$k} = $v if defined $v; return $opt{$k}; }   # so na memoria
+sub falar   { return $loaded && $char ? dizer(@_) : 0; }                          # (secoes, chance, force, vars)
+sub temFala { return $falas{ $_[0] } ? 1 : 0; }
+sub texto   { return $loaded && $char ? fala(@_) : undef; }                     # so o texto, sem falar
+sub modo    { return $mode; }
+
 sub etapaAtual {
 	my ($lv, $job) = ($char->{lv}, $char->{jobID});
-	my @daClasse = grep { $_->{jobs}{$job} && !fechado($_->{map}) } @etapas;
+	my @daClasse = grep { $_->{jobs}{$job} && abertos($_) } @etapas;
 	for my $e (@daClasse) {
 		return $e if $lv >= $e->{min} && $lv <= $e->{max};
 	}
@@ -230,6 +239,29 @@ sub etapaAtual {
 	return @cabem ? $cabem[-1] : $daClasse[0];
 }
 
+sub abertos { my ($e) = @_; return grep { !fechado($_) } @{ $e->{maps} }; }
+
+# mapa da etapa nesta sessao: com alternativas quem escolhe e o mazzaRota
+sub mapaDaEtapa {
+	my ($e) = @_;
+	my @a = abertos($e);
+	return $e->{map} unless @a;
+	return defined &mazzaRota::mapa ? mazzaRota::mapa(\@a) : $a[0];
+}
+
+# o ponto da cidade no proprio mapa dela (a fonte de Prontera...), para o passeio do mazzaRota
+sub pontoDaCidade {
+	my ($city) = @_;
+	my ($p) = grep { $_->{map} eq $city } @{ $pontos{$city} || [] };
+	return $p;
+}
+
+# sentar pede Habilidades Basicas 3 (sem isso o servidor recusa e o log enche a cada segundo)
+sub podeSentar { return $char->getSkillLevel(Skill->new(handle => 'NV_BASIC')) >= 3; }
+sub sentar { Commands::run('sit') if podeSentar() && !$char->{sitting}; }
+
+sub passeando { return defined &mazzaRota::passeio && mazzaRota::passeio($md{since}); }
+
 sub combate {
 	my ($on) = @_;
 	my $e = etapaAtual();
@@ -237,7 +269,8 @@ sub combate {
 		configModify('attackAuto', $opt{ataque_normal}, 1) if ($config{attackAuto} || '') ne $opt{ataque_normal};
 		configModify('route_randomWalk', 1, 1) unless $config{route_randomWalk};
 		if ($e) {
-			configModify('lockMap', $e->{map}, 1)  if ($config{lockMap} || '') ne $e->{map};
+			my $m = mapaDaEtapa($e);
+			configModify('lockMap', $m, 1)  if ($config{lockMap} || '') ne $m;
 			configModify('saveMap', $e->{city}, 1) if ($config{saveMap} || '') ne $e->{city};
 			if (my $loja = $lojas{ $e->{city} }) {
 				# loot vendido e pocao comprada na loja de ferramentas da cidade-base (items_control: auto-sell)
@@ -355,8 +388,10 @@ sub tick {
 			Commands::run('stand') if $char->{sitting};
 			dizer('fim_pausa', 60, 0);
 			agendarPausa(); setMode('jornada');
-		} elsif (!$char->{sitting} && !AI::is('route', 'mapRoute', 'attack')) {
-			Commands::run('sit');
+		} elsif (AI::is('attack')) {
+		} elsif (passeando()) {     # mazzaRota: Kafra, lojas, onde tem gente, antes de sentar
+		} elsif (!$char->{sitting} && !AI::is('route', 'mapRoute')) {
+			sentar();
 		}
 		return;
 	}
@@ -383,7 +418,7 @@ sub tick {
 		if (!$md{chegou}) {
 			if (andarAte($p->{map}, $p->{x}, $p->{y}, 3)) {
 				$md{chegou} = time; $md{sai} = time + rnd(25, 70);
-				Commands::run('sit') if rand() < 0.6;
+				sentar() if rand() < 0.6;
 				dizer(["turismo_$p->{map}", "turismo_$md{city}", 'turismo'], 100, 1);
 			} elsif (time - $md{since} > 300) {     # nao conseguiu chegar
 				warning "[$NAME] nao cheguei em $p->{map} $p->{x},$p->{y}; ponto marcado como visto.\n";
@@ -415,7 +450,7 @@ sub tick {
 	if ($mode eq 'retorno') {
 		if ($map eq $md{city} && !AI::is('route', 'mapRoute')) {
 			setMode('pausa', fim => time + ($md{dur} || 60 * rnd($opt{pausa_duracao_min}, $opt{pausa_duracao_max})));
-			Commands::run('sit');
+			sentar() unless defined &mazzaRota::passeio;
 			dizer('pausa', 70, 1);
 		} elsif (!AI::is('route', 'mapRoute') && time - $lastMoveCmd > 15) {
 			Commands::run("move $md{city}"); $lastMoveCmd = time;
