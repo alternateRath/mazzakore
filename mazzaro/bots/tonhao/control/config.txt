@@ -160,3 +160,21 @@ mazzaPessoa 1
 mazzaPessoa_papel vendedor
 mazzaPessoa_yee 0.57 0.36 0.33 0.50 0.33 0.32 0.17 0.48 0.67 0.30
 mazzaPessoa_deriva 0.10
+
+######## Conversa (plugins/mazzaPapo; sorteado pelo gerador) ########
+mazzaPapo 1
+mazzaPapo_jeito zoeiro
+mazzaPapo_abrev 0.63
+mazzaPapo_minusculas 0.93
+mazzaPapo_emoticon 0.44
+mazzaPapo_rajada 0.47
+mazzaPapo_erro 132
+mazzaPapo_corrige 0.68
+mazzaPapo_digita 152 246
+mazzaPapo_ler 0.4 2.2
+mazzaPapo_ignora 0.11
+mazzaPapo_assunto 4 12
+# LLM local (opcional, so PM e quem chama o nome): Ollama do notebook pelo Tailscale ou por tunel ssh
+# mazzaPapo_llm http://127.0.0.1:11434
+# mazzaPapo_llm_modelo qwen3:4b-instruct
+mazzaPapo_llm_teto 20

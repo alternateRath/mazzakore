@@ -40,7 +40,7 @@ KORE = BOTS.parents[1]                            # <mazzakore>
 WS = KORE.parent                                  # workspace
 MZ = WS / 'mazzaro'                               # repo mazzaro (perfis, tools)
 NO_WINDOW, NEW_CONSOLE = 0x08000000, 0x10
-PLUGINS = 'mazzaJornada,raiseStat,raiseSkill,mzctl,timeoutRandomizer,mazzaRitmo,Drunk,mazzaRota,mazzaPessoa'
+PLUGINS = 'mazzaJornada,raiseStat,raiseSkill,mzctl,timeoutRandomizer,mazzaRitmo,Drunk,mazzaRota,mazzaPessoa,mazzaPapo'
 CTL_BASE = 6960                                   # mzctl de cada bot: bot.yml "ctl:" ou 6960 + posicao na lista
 
 sys.path.insert(0, str(BOTS))                     # com python -I a pasta do script nao entra no path

@@ -1,0 +1,253 @@
+# Frases do mazzaPapo (F4). Sem acento (serverEncoding Western).
+# [secao] vale para todos; [secao@jeito] (empolgado, veterano, zoeiro, timido) ganha quando existe.
+# Uma secao papo_<secao> no falas.txt do bot ganha das duas.
+# Variaveis: {nome} {lv} {prox} {pct} {falta} {zeny} {classe} {mapa} {cidade} {item} {monstro} {periodo}
+#            {meta_dia} {jogador} {episodio} {lugar}
+# O estilo (abreviacao, emoticon, rajada, erro de digitacao) e posto por cima: escrever "normal" tambem serve.
+
+# ------------------------------------------------------------- eventos ---
+[assunto_carta]
+CARTA!!!
+dropei uma {item} *-*
+nao acredito, {item}
+caiu {item}... alguem sabe qto vale?
+/e 0 CARTAAA
+mae olha eu dropei carta
+
+[assunto_carta@veterano]
+{item}. finalmente
+caiu {item}, so 3 dias de farm
+alguem paga qto numa {item}?
+
+[assunto_carta@timido]
+caiu uma carta...
+nossa, {item} ><
+
+[assunto_drop]
+dropei {item}
+olha so, {item}
+{item} caiu aqui, alguem quer?
+alguem sabe se {item} vale alguma coisa?
+
+[assunto_forte]
+{monstro} aqui em {mapa}!!
+corre q tem {monstro} aqui
+alguem ajuda a matar o {monstro}?
+/e 1 {monstro} nasceu do meu lado
+gente o {monstro} ta aqui
+
+[assunto_forte@zoeiro]
+{monstro} apareceu, quem quiser morrer fica
+o {monstro} veio me buscar huahua
+
+[assunto_forte@timido]
+tem um {monstro} aqui...
+
+[assunto_lotado]
+nossa q tanto de gente aqui
+mapa lotado hj
+ta dificil achar bicho, mt gente
+esse mapa ta cheio demais
+povo todo veio upar aqui hj?
+
+[assunto_episodio]
+viu? chegou {episodio}
+abriu mapa novo, bora ver
+{episodio} chegou, alguem ja foi nos mapas novos?
+finalmente {episodio}
+
+[assunto_fechado]
+nao deixa entrar em {lugar}, so em {episodio}
+alguem sabe qdo abre {lugar}?
+
+[assunto_morreu]
+perdi td meu xp agora
+morri e perdi {pct}%... raiva
+quem me deixou morrer la?
+nunca mais vou la sozinho
+
+# ------------------------------------------------------------- do nada ---
+[assunto_pergunta]
+alguem sabe onde dropa {item}?
+alguem sabe onde fica o npc de {classe}?
+qual o melhor lugar pra upar no lv {lv}?
+alguem vende pocao barato?
+alguem tem asa de mosca sobrando?
+alguem sabe se o {monstro} dropa carta boa?
+alguem quer fazer pt?
+quanto ta {item} hj?
+alguem sabe que horas e a manutencao?
+compensa upar aqui ou vou pra outro lugar?
+algum {classe} pra me dar umas dicas?
+alguem ai tem msn?
+
+[assunto_pergunta@veterano]
+alguem vende elunium?
+quanto ta pagando em {item} hj?
+algum sacer pra pt?
+alguem sabe se mudaram o drop do {monstro}?
+
+[assunto_pergunta@empolgado]
+alguem quer fazer pt comigo???
+alguem me ajuda a upar?
+gente onde eu upo agora no lv {lv}?
+
+[assunto_geral]
+q sono
+alguem ai?
+cade a galera hj?
+esse servidor ta mt bom
+to com fome
+alguem joga cs tbm?
+meu irmao quer o pc...
+vou upar ate o {prox} e vou dormir
+minha mae ja ta brigando
+hj eu nao saio daqui
+alguem ouvindo musica?
+
+[assunto_geral@zoeiro]
+alguem me empresta 1kk? juro q pago huahua
+quem ai e noob levanta a mao
+to ficando bom nisso
+esse {monstro} ta me encarando
+
+[assunto_geral@timido]
+oi
+...
+alguem ai?
+
+[assunto_xp]
+{pct}% pro {prox}
+falta {falta}% pro lv {prox}
+ainda faltam {falta}%...
+q xp demorada
+so mais um pouco pro {prox}
+
+[assunto_zeny]
+to com {zeny} so
+{zeny}... to pobre
+preciso juntar zeny pra comprar uns equip
+alguem paga bem em {item}?
+zeny nao fica na minha mao
+
+[assunto_monstro]
+esse {monstro} bate forte
+q raiva desse {monstro}
+{monstro} so dropa lixo
+matei uns 50 {monstro} e nada
+odeio {monstro}
+
+[assunto_horario]
+boa {periodo} galera
+ja e {periodo} e eu aqui
+to aqui desde cedo
+amanha tem aula e eu aqui
+
+[assunto_lag]
+q lag
+ta lagando pra vcs tbm?
+lag do inferno
+travou tudo aqui
+meu ping ta horrivel hj
+
+[assunto_meta]
+hj eu so quero {meta_dia}
+hj e dia de {meta_dia}
+vim so {meta_dia} hj
+
+[assunto_cidade]
+alguem vende pot?
+alguem me da uma asa de borboleta?
+qual o caminho pro {mapa}?
+essa cidade e mt grande
+alguem do cla aqui?
+alguem compra {item}?
+
+[assunto_vende]
+V> {item} barato
+C> pocao laranja
+V> {item}, pm
+alguem compra {item}?
+
+[assunto_aprendiz]
+aprendiz, quer ajuda?
+precisa de ajuda ai aprendiz?
+noob, quer umas pot? huahua
+olha os aprendiz ai, que fofo
+
+# ------------------------------------------------------------ respostas ---
+[resp_bot]
+bot e vc
+q bot o q
+nao, por que?
+to jogando na mao msm
+parece?
+ue, nao
+claro q nao
+q isso
+eu nao
+
+[resp_bot@zoeiro]
+bot e a sua mae huahua
+sou sim, bip bop huahuahua
+bot nada, sou o melhor jogador daqui
+q bot, ta doido?
+
+[resp_bot@veterano]
+nao
+pq?
+jogo desde o beta, nao preciso de bot
+q pergunta
+
+[resp_bot@timido]
+nao... ><
+eu nao sou bot
+por que?
+
+[resp_bot_de_novo]
+ja falei q nao
+de novo isso?
+para com isso
+q chato
+nao e nao
+
+[resp_elogio]
+vlw {jogador}
+hehe obrigado
+^^
+brigado
+q isso, vc tbm
+
+[resp_elogio@zoeiro]
+eu sei huahua
+fala algo q eu nao sei
+
+[resp_xingado]
+noob e vc
+q isso
+fica na tua
+para ai
+ta bom entao
+
+[resp_xingado@zoeiro]
+noob e vc huahuahua
+chora mais
+tbm te amo {jogador}
+
+[resp_xingado@timido]
+desculpa...
+nao fiz nada
+
+[resp_raiva]
+me deixa
+vai encher outro
+nao enche
+chega, vou te ignorar
+
+[resp_pedido]
+nao tenho
+to pobre tbm
+nem tenho pra mim
+to juntando pra mim
+pede pra outro
+tenho nao, mals

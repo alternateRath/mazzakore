@@ -68,7 +68,8 @@ python -I mazzaro\bots\bots.py --criar-conta bia
 - `--perfil-horario estudante|trabalhador|noturno|fim-de-semana` (sem ele: sorteado, metade estudante): o gerador
   escreve no `control\config.txt` o bloco `mazzaRitmo_*` com perfil, janela própria, horas por semana, dias, reação,
   ping, AFK, pausa e limiares sorteados para o bot (ver "Ritmo e agenda" abaixo), e o bloco `mazzaRota_*`/`drunk_*`
-  com permanência, saltos, paradas e mapas por sessão (ver "Rotas" abaixo).
+  com permanência, saltos, paradas e mapas por sessão (ver "Rotas" abaixo), o `mazzaPessoa_*` do papel e o
+  `mazzaPapo_*` do jeito de escrever da personalidade (ver "Conversa" abaixo).
 - Etapa com `mapa1,mapa2,...`: alternativas da mesma faixa (o `--validar` confere cada uma no bro-01).
 - O `items_control.txt` é gerado em `run\bots\<bot>\control`: vende o loot no Tool Dealer da cidade-base
   (linhas `loja`) e guarda poção, asa, gema, flecha, minério, caixa e todas as cartas.
@@ -108,6 +109,18 @@ a um ponto anterior; o Drunk entorta cada rota. Etapa com mapas alternativos: 1-
 de 15-45 min). Na pausa, antes de sentar, o bot passa por 1-3 lugares da cidade (Kafra, lojas, perto de gente, o
 ponto da cidade). Teste rápido: `mazzaRota_teste 6` (minutos viram 6 s) e `mazzaRota_mapas 0 0 100`.
 
+## Conversa (`plugins/mazzaPapo`)
+Fase F4 do plano ([README do plugin](../../plugins/mazzaPapo/README.md), briefing em
+`mazzaro/docs/bots/F4-conversa.md`). O mazzaPapo é o dono do chat: o `mazzaJornada::dizer` (e com ele as falas de
+papel do `mazzaPessoa`) passa o texto para ele, que escreve no jeito do bRO de 2004 (abreviação, caixa baixa,
+emoticon e risada da personalidade, rajada de linhas curtas, erro de digitação com correção `palavra*`), digita com
+tempo de gente (fila sem travar o laço, presa no AFK do mazzaRitmo), puxa assunto por evento (carta, monstro forte,
+episódio novo, mapa lotado, xp, zeny, perguntas) conforme o socializar do dia, e responde PM, chamado e cumprimento
+(regras do AnswerChat + falas da persona; LLM local opcional). Nunca responde a outro bot desta pasta nem a GM.
+O gerador escreve o bloco `mazzaPapo_*` sorteado pela personalidade (`gerar.JEITOS`); nos bots antigos o bloco foi
+acrescentado no fim do `control\config.txt`. Linhas mandadas: `run\logs\bots\<bot>\papo_<conta>.log`.
+Medida: `mz bots regua --fala [bot ...]` e o teste cego `python -I tools\mz\papo_cego.py` (no mazzaro).
+
 Bot feito à mão: copiar `aldren\`, trocar `bot.yml` (conta, personagem, `ctl`) e reescrever o `control\`.
 
 ### jornada.txt
@@ -121,7 +134,8 @@ opcao  <chave> <valor>
 ### falas.txt
 Seções `[levelup] [classe] [rumo_classe] [cidade_nova] [turismo] [turismo_<mapa>] [turismo_<cidade>] [chegou_campo]
 [ambiente] [morte] [indo_pausa] [pausa] [fim_pausa] [chamado] [saudacao] [pm] [bloqueado]`; variáveis `{nome} {lv}
-{cidade} {jogador}`; `/e N texto` faz um emote antes. Sem acentos (serverEncoding Western).
+{cidade} {jogador}`; `/e N texto` faz um emote antes. Sem acentos (serverEncoding Western). Com o mazzaPapo, uma
+seção `[papo_<secao>]` troca a do `plugins/mazzaPapo/papo.txt` (`papo_assunto_carta`, `papo_resp_bot`...).
 
 ## Motor de Episódios
 O plugin lê o aviso do `episodios.txt` ("Esta regiao ainda nao foi descoberta ... <mapa> chega em ...") e pula a etapa

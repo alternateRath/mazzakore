@@ -50,7 +50,9 @@ algum autor pedir, é só tirar a pasta. partyBuilder é GPLv2. O Drunk daqui n�
    (`timeout_randomizer.txt`, `shop.txt`, `kadiliman.txt`) precisam existir **antes** de o bot subir: o `reload`
    só relê o arquivo que foi achado na partida.
 3. Chat: escolher **um** dono por canal (AnswerChat para PM, kadiliman para público, ou o mazzaPapo/LLM), e pôr os
-   outros bots em `AnswerChat_ignore`/`chatBot_0_noPlayers` para eles não conversarem em loop.
+   outros bots em `AnswerChat_ignore`/`chatBot_0_noPlayers` para eles não conversarem em loop. Desde a F4 os bots
+   fiéis usam o `mazzaPapo` (público e PM, já com a lista de bots e GMs ignorados); ele carrega só o
+   `AnswerChat/AnswerDatabase.pm`, então **não** ligue o AnswerChat nem o kadiliman junto com ele.
 4. Emote (onMonsterKill, reactOnKillSteal, reactOnActor, IdletimeSelfCond): Aprendiz precisa de Habilidades
    Básicas nível 2 (sem isso o servidor recusa).
 

@@ -14,6 +14,7 @@
 #   - horario e sessoes ficam com o mazzaRitmo: este plugin so fala na chegada e
 #     na saida e leva o bot pra pausa quando ele pede (hooks mazzaRitmo_*)
 #   - fala em level up, classe, morte, cidade nova; responde PM e quem o chama
+#     (com o mazzaPapo ligado, o texto vai para ele, que escreve, digita e responde)
 #   - respeita o Motor de Episodios: mapa fechado vira etapa pulada por um tempo
 #   - cria o personagem se a conta estiver vazia (mazzaJornada_personagem ...)
 #
@@ -215,11 +216,20 @@ sub dizer {
 	my $txt;
 	for my $s (ref $secs ? @$secs : ($secs)) { $txt = fala($s, %v); last if defined $txt; }
 	return 0 unless defined $txt;
+	if (papo()) {                       # mazzaPapo (F4): estilo, digitacao e fila; "/e N" tambem e com ele
+		mazzaPapo::dizer($txt, origem => ref $secs ? $secs->[0] : $secs);
+		$lastPublic = time;
+		return 1;
+	}
 	if ($txt =~ s/^\/e\s+(\S+)\s*//) { Commands::run("e $1"); }   # "/e 3 texto" -> emote + fala
 	Commands::run("c $txt") if length $txt;
 	$lastPublic = time;
 	return 1;
 }
+
+# mazzaPapo carregado e ligado: ele e o dono do chat (fala com estilo e responde PM/chamado)
+sub papo      { return defined &mazzaPapo::ligado && mazzaPapo::ligado() ? 1 : 0; }
+sub papoResp  { return defined &mazzaPapo::respostas && mazzaPapo::respostas() ? 1 : 0; }
 
 # ------------------------------------------ API para os outros plugins (mazzaPessoa) ---
 sub opcao   { my ($k, $v) = @_; $opt{$k} = $v if defined $v; return $opt{$k}; }   # so na memoria
@@ -591,12 +601,14 @@ sub processarRespostas {
 sub onPM {
 	my (undef, $a) = @_;
 	return unless $loaded && $char && defined $a->{privMsgUser};
+	return if papoResp();               # quem responde e o mazzaPapo
 	agendarResposta('pm', $a->{privMsgUser}, 'pm');
 }
 
 sub onPub {
 	my (undef, $a) = @_;
 	return unless $loaded && $char;
+	return if papoResp();
 	my ($quem, $msg) = (defined $a->{pubMsgUser} ? $a->{pubMsgUser} : '', defined $a->{pubMsg} ? $a->{pubMsg} : '');
 	return if $quem eq $char->{name} || $quem eq '';
 	if (nomeEhMeu($msg)) {

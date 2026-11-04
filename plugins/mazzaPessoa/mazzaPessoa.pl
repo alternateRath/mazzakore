@@ -143,6 +143,9 @@ sub aplicar {
 	%visto = ();
 }
 
+# API (mazzaPapo, F4): o plano do dia {meta, social, progresso, descoberta, vetor, params}
+sub plano { $plano ||= planoDoDia(time); return $plano; }
+
 sub perto {   # jogadores a ate $d celulas
 	my ($d) = @_;
 	return () unless $playersList && $char;

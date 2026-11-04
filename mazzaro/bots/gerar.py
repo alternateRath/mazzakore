@@ -242,7 +242,52 @@ def bloco_rota(rng=random):
     ]) + '\n'
 
 
-def novo(nome, mid, pers, sexo=None, personagem=None, perfil_horario=None, ctl=None, perfil='kro-2026', papel=None):
+# jeito de escrever por personalidade (plugins/mazzaPapo, F4): faixas sorteadas por bot
+#   abrev, minusculas, emoticon, rajada, corrige: 0-1; erro: 1 erro a cada ~N letras; digita: ms por letra (min, max)
+#   assunto: falas puxadas por hora ativa (min, max: o socializar do dia do mazzaPessoa escolhe); ignora: 0-1
+JEITOS = {
+    'empolgado': {'abrev': (.6, .8), 'minusculas': (.75, .9), 'emoticon': (.35, .55), 'rajada': (.35, .5),
+                  'erro': (90, 150), 'corrige': (.55, .75), 'digita': (130, 170, 230, 280), 'assunto': (3, 10),
+                  'ignora': (.03, .08)},
+    'veterano':  {'abrev': (.7, .9), 'minusculas': (.9, .98), 'emoticon': (.08, .18), 'rajada': (.2, .35),
+                  'erro': (150, 250), 'corrige': (.4, .6), 'digita': (110, 150, 190, 240), 'assunto': (2, 7),
+                  'ignora': (.12, .2)},
+    'zoeiro':    {'abrev': (.6, .85), 'minusculas': (.85, .95), 'emoticon': (.35, .5), 'rajada': (.35, .5),
+                  'erro': (80, 140), 'corrige': (.5, .7), 'digita': (130, 160, 230, 270), 'assunto': (4, 12),
+                  'ignora': (.06, .12)},
+    'timido':    {'abrev': (.35, .55), 'minusculas': (.9, .98), 'emoticon': (.25, .4), 'rajada': (.15, .3),
+                  'erro': (150, 260), 'corrige': (.65, .85), 'digita': (180, 220, 280, 340), 'assunto': (1, 4),
+                  'ignora': (.15, .25)},
+}
+
+
+def bloco_papo(pers, rng=random):
+    """Bloco mazzaPapo_* do config.txt: jeito de escrever, digitacao e assuntos sorteados pela personalidade."""
+    j = JEITOS.get(pers, JEITOS['veterano'])
+    u = lambda k: rng.uniform(*j[k])
+    d = j['digita']
+    return '\n'.join([
+        '######## Conversa (plugins/mazzaPapo; sorteado pelo gerador) ########',
+        'mazzaPapo 1',
+        f'mazzaPapo_jeito {pers if pers in JEITOS else "veterano"}',
+        f'mazzaPapo_abrev {u("abrev"):.2f}',
+        f'mazzaPapo_minusculas {u("minusculas"):.2f}',
+        f'mazzaPapo_emoticon {u("emoticon"):.2f}',
+        f'mazzaPapo_rajada {u("rajada"):.2f}',
+        f'mazzaPapo_erro {rng.randint(*j["erro"])}',
+        f'mazzaPapo_corrige {u("corrige"):.2f}',
+        f'mazzaPapo_digita {rng.randint(d[0], d[1])} {rng.randint(d[2], d[3])}',
+        f'mazzaPapo_ler {rng.uniform(.4, .7):.1f} {rng.uniform(1.6, 2.4):.1f}',
+        f'mazzaPapo_ignora {u("ignora"):.2f}',
+        f'mazzaPapo_assunto {j["assunto"][0]} {j["assunto"][1]}',
+        '# LLM local (opcional, so PM e quem chama o nome): Ollama do notebook pelo Tailscale ou por tunel ssh',
+        '# mazzaPapo_llm http://127.0.0.1:11434',
+        '# mazzaPapo_llm_modelo qwen3:4b-instruct',
+        'mazzaPapo_llm_teto 20',
+    ]) + '\n'
+
+
+def novo(nome, mid, pers,sexo=None, personagem=None, perfil_horario=None, ctl=None, perfil='kro-2026', papel=None):
     """Cria mazzaro/bots/<nome>/ a partir do modelo e da personalidade."""
     if not re.fullmatch(r'[a-z0-9_]{3,20}', nome):
         raise SystemExit('nome do bot: 3-20 letras minusculas, digitos ou _')
@@ -277,7 +322,7 @@ def novo(nome, mid, pers, sexo=None, personagem=None, perfil_horario=None, ctl=N
     cfg += (f'\n######## Build: {m["nome"]} (modelos/{mid}.yml) ########\n'
             f'statsAddAuto_list {m["stats"]}\n'
             f'skillsAddAuto_list {" ".join(str(m["skills"]).split())}\n\n{m.get("config") or ""}')
-    cfg += '\n' + ritmo + '\n' + bloco_rota() + '\n' + bloco_pessoa(papel)
+    cfg += '\n' + ritmo + '\n' + bloco_rota() + '\n' + bloco_pessoa(papel) + '\n' + bloco_papo(pers)
     (dst / 'control' / 'config.txt').write_text(cfg, encoding='utf-8')
 
     troca = {int(k): int(v) for k, v in (m.get('troca_classe') or {}).items()}
